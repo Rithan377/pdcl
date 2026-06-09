@@ -1,0 +1,783 @@
+
+  CPU Backend: NumPy (install cupy-cuda12x for GPU acceleration)
+
+
+======================================================================
+  PDCL GPU Training — RTX 4080 (11.5 GB VRAM)
+======================================================================
+
+Configuration:
+  • Dimensions       : 16
+  • d_model          : 128
+  • Batch size       : 2
+  • Train samples    : 200 (pre-tokenized to GPU)
+  • Val samples      : 40
+  • Epochs           : 20
+  • Steps/epoch      : 20
+
+======================================================================
+  STARTING GPU TRAINING
+======================================================================
+
+
+======================================================================
+  PDCL TRAINING — VALIDATING CONFIGURATION
+======================================================================
+
+✓ Configuration validated successfully
+  Dimensions: 16 | d_model: 128
+  Data: 200 train, 40 val
+  GPU: False
+
+Step 1: Loading tokenizer...
+Tokenizer loaded from ./tokenizer
+Vocab size: 8000 | Merges: 7952
+  ✓ Tokenizer loaded | Vocab: 8000
+
+Step 2: Loading data...
+  ✓ Data loaded | Train: 200 | Val: 40
+
+Step 3: Building master model...
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+  ✓ Master model created
+
+FeatureDimensionPruner initialized:
+  d_model              : 128
+  Prune range          : 10.0% → 35.0%
+  Warm-up epochs       : 3
+  EMA decay            : 0.95
+Step 4.5: Pre-tokenizing training data...
+
+======================================================================
+  PRE-TOKENIZATION TO GPU
+======================================================================
+  Samples  : 200
+  Device   : CPU (NumPy)
+  Valid    : 146/200 samples aligned
+  Skipped  : 54 (bad alignment)
+  RAM      : ~0.5 MB
+======================================================================
+
+  ✓ Pre-tokenization complete | GPU pinned: False
+    Total samples pre-cached: 200
+
+Step 5: Initializing parallel engine...
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+EmbeddingLayer initialized:
+  vocab_size    : 8000
+  d_model       : 128
+  max_pos       : 292
+  num_segments  : 2
+  Parameters    : 1,061,888
+DimensionSegmentation Layer initialized:
+  d_model       : 128
+  d_doc segment : 64
+  d_que segment : 64
+ParallelAttention initialized:
+  d_model  : 128
+  n_heads  : 4
+  Conn EMA : 0.95 | prune δ: 0.02
+GroupRelationDetector initialized:
+  d_model          : 128
+  pair_threshold   : 0.15
+  group_threshold  : 0.1
+  Active from epoch: 3
+AdaptiveSoftPruning initialized:
+  d_model        : 128
+  k_factor       : 0.5 (adaptive threshold = mean + k*std)
+  gate_sharpness : 3.0
+  Mode           : SOFT GATING — no tokens removed, all weighted
+
+CoreBurstBackprop initialized:
+  vocab_size   : 8000
+  d_model      : 128
+  burst β      : 2.0
+  k_factor     : 0.5 (adaptive soft pruning)
+CrossDimensionGraph initialized:
+  n_dimensions     : 16
+  d_model          : 128
+  correlation λ    : 0.5
+  Graph active at  : epoch 2
+ParallelDimensionEngine initialized:
+  Dimensions   : 16
+  Mode         : Pre-tokenized (GPU) ✓
+  Data splits  : [10, 10, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]
+  ✓ Parallel engine ready (16 dimensions)
+
+======================================================================
+  PDCL TRAINING — ALL COMPONENTS ACTIVE
+======================================================================
+  Model Config:
+    • Dimensions       : 16
+    • Epochs           : 20 × 20 steps
+    • d_model          : 128
+    • n_heads          : 4
+    • Batch size       : 2
+    • Learning rate    : 0.005
+
+  Burst Backprop:
+    • β (sharpness)    : 2.0
+
+  Soft Pruning (Adaptive):
+    • k_factor         : 0.5
+    • gate_sharpness   : 3.0
+
+  Feature Pruning:
+    • Range            : 10.0%→35.0%
+    • Warmup epochs    : 3
+
+  Connection Pruning:
+    • Threshold δ      : 0.02
+    • From epoch       : 3
+
+  Hardware:
+    • GPU              : False
+    • Answer matching  : fuzzy (edit distance ≤ 3)
+    • Bad samples      : skip (no poisoned targets)
+======================================================================
+
+Pre-tokenizing validation data...
+
+======================================================================
+  PRE-TOKENIZATION TO GPU
+======================================================================
+  Samples  : 40
+  Device   : CPU (NumPy)
+  Valid    : 27/40 samples aligned
+  Skipped  : 13 (bad alignment)
+  RAM      : ~0.1 MB
+======================================================================
+
+  ✓ Validation pre-tokenization complete
+
+Epoch  1/20 | Train: 5.5710 | Val Loss: 5.5460 | EM: 0.0% | F1: 0.0% | Time: 16.4s
+  Dims: D0:5.641 | D1:5.590 | D2:5.637 | D3:5.470 | D4:5.444 | D5:5.601 | D6:5.541 | D7:5.718 | D8:5.556 | D9:5.661 | D10:5.584 | D11:5.576 | D12:5.517 | D13:5.574 | D14:5.429 | D15:5.597
+  PDCL: graph_edges: 0 | graph_max_corr: 0.0 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+Epoch  2/20 | Train: 5.5272 | Val Loss: 5.5345 | EM: 0.0% | F1: 0.0% | Time: 16.0s
+  Dims: D0:5.582 | D1:5.542 | D2:5.552 | D3:5.440 | D4:5.412 | D5:5.578 | D6:5.501 | D7:5.582 | D8:5.587 | D9:5.594 | D10:5.521 | D11:5.577 | D12:5.521 | D13:5.492 | D14:5.430 | D15:5.523
+  PDCL: graph_edges: 16 | graph_max_corr: 0.994 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+Epoch  3/20 | Train: 5.4917 | Val Loss: 5.4989 | EM: 0.0% | F1: 0.0% | Time: 16.8s
+  Dims: D0:5.492 | D1:5.484 | D2:5.553 | D3:5.446 | D4:5.327 | D5:5.563 | D6:5.450 | D7:5.579 | D8:5.598 | D9:5.546 | D10:5.492 | D11:5.533 | D12:5.456 | D13:5.461 | D14:5.445 | D15:5.471
+  PDCL: feature_sparsity: 0.1016 | conn_pruned: 90335 | graph_edges: 58 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+Epoch  4/20 | Train: 5.4454 | Val Loss: 5.4915 | EM: 0.0% | F1: 0.0% | Time: 16.7s
+  Dims: D0:5.456 | D1:5.482 | D2:5.554 | D3:5.291 | D4:5.247 | D5:5.462 | D6:5.426 | D7:5.610 | D8:5.467 | D9:5.581 | D10:5.413 | D11:5.460 | D12:5.498 | D13:5.382 | D14:5.353 | D15:5.409
+  PDCL: feature_sparsity: 0.2109 | conn_pruned: 90340 | graph_edges: 25 | graph_max_corr: 0.928 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+Epoch  5/20 | Train: 5.4280 | Val Loss: 5.4844 | EM: 0.0% | F1: 0.0% | Time: 16.8s
+  Dims: D0:5.418 | D1:5.475 | D2:5.539 | D3:5.289 | D4:5.319 | D5:5.377 | D6:5.315 | D7:5.550 | D8:5.516 | D9:5.552 | D10:5.462 | D11:5.414 | D12:5.436 | D13:5.394 | D14:5.390 | D15:5.393
+  PDCL: feature_sparsity: 0.3125 | conn_pruned: 90364 | graph_edges: 31 | graph_max_corr: 0.994 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+Epoch  6/20 | Train: 5.3535 | Val Loss: 5.4777 | EM: 0.0% | F1: 0.0% | Time: 21.9s
+  Dims: D0:5.273 | D1:5.361 | D2:5.502 | D3:5.150 | D4:5.148 | D5:5.319 | D6:5.248 | D7:5.511 | D8:5.540 | D9:5.443 | D10:5.365 | D11:5.448 | D12:5.392 | D13:5.352 | D14:5.355 | D15:5.288
+  PDCL: feature_sparsity: 0.4141 | conn_pruned: 90391 | graph_edges: 21 | graph_max_corr: 0.928 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+Epoch  7/20 | Train: 5.3077 | Val Loss: 5.4562 | EM: 0.0% | F1: 0.0% | Time: 18.3s
+  Dims: D0:5.132 | D1:5.237 | D2:5.451 | D3:5.065 | D4:5.174 | D5:5.232 | D6:5.183 | D7:5.467 | D8:5.535 | D9:5.512 | D10:5.356 | D11:5.345 | D12:5.300 | D13:5.236 | D14:5.347 | D15:5.392
+  PDCL: feature_sparsity: 0.5078 | conn_pruned: 90394 | graph_edges: 38 | graph_max_corr: 0.796 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+Epoch  8/20 | Train: 5.2271 | Val Loss: 5.4417 | EM: 0.0% | F1: 0.0% | Time: 17.5s
+  Dims: D0:5.088 | D1:5.138 | D2:5.440 | D3:4.886 | D4:4.972 | D5:5.132 | D6:5.134 | D7:5.351 | D8:5.594 | D9:5.435 | D10:5.267 | D11:5.317 | D12:5.136 | D13:5.263 | D14:5.316 | D15:5.168
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90396 | graph_edges: 38 | graph_max_corr: 0.904 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+Epoch  9/20 | Train: 5.1549 | Val Loss: 5.3901 | EM: 0.0% | F1: 0.0% | Time: 19.0s
+  Dims: D0:4.926 | D1:5.151 | D2:5.400 | D3:4.792 | D4:4.907 | D5:5.023 | D6:4.960 | D7:5.404 | D8:5.545 | D9:5.337 | D10:5.390 | D11:5.186 | D12:5.069 | D13:5.074 | D14:5.230 | D15:5.045
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90398 | graph_edges: 46 | graph_max_corr: 0.904 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+Epoch 10/20 | Train: 5.0183 | Val Loss: 5.3515 | EM: 0.0% | F1: 0.0% | Time: 17.6s
+  Dims: D0:4.833 | D1:4.992 | D2:5.162 | D3:4.628 | D4:4.744 | D5:4.905 | D6:4.723 | D7:5.307 | D8:5.640 | D9:5.076 | D10:5.304 | D11:4.995 | D12:5.037 | D13:5.019 | D14:5.152 | D15:4.816
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90419 | graph_edges: 30 | graph_max_corr: 0.928 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+Epoch 11/20 | Train: 4.9130 | Val Loss: 5.3267 | EM: 0.0% | F1: 0.0% | Time: 18.9s
+  Dims: D0:4.704 | D1:4.802 | D2:5.227 | D3:4.501 | D4:4.677 | D5:4.662 | D6:4.566 | D7:5.182 | D8:5.528 | D9:4.966 | D10:5.177 | D11:5.046 | D12:4.717 | D13:4.856 | D14:5.192 | D15:4.815
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90421 | graph_edges: 34 | graph_max_corr: 0.947 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+Epoch 12/20 | Train: 4.8126 | Val Loss: 5.3039 | EM: 0.0% | F1: 0.0% | Time: 18.4s
+  Dims: D0:4.572 | D1:4.792 | D2:5.080 | D3:4.373 | D4:4.468 | D5:4.469 | D6:4.431 | D7:5.103 | D8:5.544 | D9:4.747 | D10:5.062 | D11:4.848 | D12:4.869 | D13:4.768 | D14:5.201 | D15:4.668
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90422 | graph_edges: 31 | graph_max_corr: 0.967 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+Epoch 13/20 | Train: 4.7298 | Val Loss: 5.2798 | EM: 0.0% | F1: 0.0% | Time: 17.9s
+  Dims: D0:4.519 | D1:4.675 | D2:5.234 | D3:4.134 | D4:4.389 | D5:4.443 | D6:4.213 | D7:5.101 | D8:5.500 | D9:4.730 | D10:5.070 | D11:4.810 | D12:4.478 | D13:4.607 | D14:5.104 | D15:4.585
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90422 | graph_edges: 25 | graph_max_corr: 0.967 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+Epoch 14/20 | Train: 4.6131 | Val Loss: 5.2642 | EM: 0.0% | F1: 0.0% | Time: 21.3s
+  Dims: D0:4.392 | D1:4.672 | D2:4.946 | D3:4.045 | D4:4.244 | D5:4.255 | D6:4.163 | D7:5.031 | D8:5.434 | D9:4.530 | D10:4.887 | D11:4.663 | D12:4.536 | D13:4.475 | D14:4.999 | D15:4.573
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90422 | graph_edges: 42 | graph_max_corr: 0.977 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+Epoch 15/20 | Train: 4.4857 | Val Loss: 5.2465 | EM: 0.0% | F1: 0.0% | Time: 19.2s
+  Dims: D0:4.262 | D1:4.455 | D2:4.885 | D3:3.881 | D4:4.234 | D5:4.055 | D6:4.091 | D7:4.787 | D8:5.512 | D9:4.389 | D10:4.935 | D11:4.517 | D12:4.344 | D13:4.282 | D14:5.000 | D15:4.438
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90422 | graph_edges: 27 | graph_max_corr: 0.977 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+Epoch 16/20 | Train: 4.3766 | Val Loss: 5.2295 | EM: 0.0% | F1: 0.0% | Time: 20.1s
+  Dims: D0:4.181 | D1:4.404 | D2:4.825 | D3:3.725 | D4:3.987 | D5:3.986 | D6:3.845 | D7:4.893 | D8:5.550 | D9:4.259 | D10:4.628 | D11:4.425 | D12:4.002 | D13:4.243 | D14:4.769 | D15:4.280
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90422 | graph_edges: 20 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+Epoch 17/20 | Train: 4.2947 | Val Loss: 5.2092 | EM: 0.0% | F1: 0.0% | Time: 23.3s
+  Dims: D0:4.057 | D1:4.320 | D2:4.634 | D3:3.620 | D4:4.041 | D5:3.800 | D6:3.925 | D7:4.778 | D8:5.193 | D9:3.968 | D10:4.809 | D11:4.308 | D12:3.943 | D13:4.029 | D14:5.002 | D15:4.234
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90423 | graph_edges: 36 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+Epoch 18/20 | Train: 4.1635 | Val Loss: 5.1888 | EM: 0.0% | F1: 0.0% | Time: 25.0s
+  Dims: D0:3.892 | D1:4.144 | D2:4.605 | D3:3.537 | D4:3.726 | D5:3.591 | D6:3.473 | D7:4.669 | D8:5.367 | D9:3.758 | D10:4.581 | D11:4.206 | D12:4.006 | D13:3.966 | D14:4.900 | D15:4.229
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90423 | graph_edges: 27 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+Epoch 19/20 | Train: 4.0386 | Val Loss: 5.1652 | EM: 0.0% | F1: 0.0% | Time: 25.0s
+  Dims: D0:3.794 | D1:4.101 | D2:4.414 | D3:3.212 | D4:3.574 | D5:3.408 | D6:3.590 | D7:4.636 | D8:5.231 | D9:3.565 | D10:4.387 | D11:4.100 | D12:3.649 | D13:3.822 | D14:4.846 | D15:4.065
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90423 | graph_edges: 20 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+Epoch 20/20 | Train: 3.9197 | Val Loss: 5.1452 | EM: 0.0% | F1: 0.0% | Time: 25.6s
+  Dims: D0:3.738 | D1:3.950 | D2:4.435 | D3:3.088 | D4:3.371 | D5:3.275 | D6:3.220 | D7:4.565 | D8:5.205 | D9:3.343 | D10:4.290 | D11:4.034 | D12:3.562 | D13:3.771 | D14:4.757 | D15:4.091
+  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90423 | graph_edges: 51 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 13 samples (alignment)
+  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
+⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+
+======================================================================
+TRAINING COMPLETE
+======================================================================
+Final Val EM : 0.0%
+Final Val F1 : 0.0%
+Avg Feature Sparsity: 59.4%
+⚠ Failed to save final checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+
+Example Predictions:
+----------------------------------------------------------------------
+  [skipped: Could not align answer '846,000,000' to document tokens. Exact match failed, fuzzy match failed (edit distance > 3). This sample will be skipped.]
+  Q: What was Halcyon Technologies's operating margin in Q4 2023?
+  Target : 11.6%
+  Predict: performance
+  Noise  : medium | Gate keep≈31%
+----------------------------------------------------------------------
+  Q: What was Crestline Biotech's total revenue in Q1 2021?
+  Target : 157,200,000
+  Predict: 0.7%
+  Noise  : low | Gate keep≈31%
+----------------------------------------------------------------------
+  Q: What market share did Pinnacle Dynamics hold in Europe during Q3 2021?
+  Target : 35.3%
+  Predict: 3
+  Noise  : medium | Gate keep≈31%
+----------------------------------------------------------------------
+  Q: How many employees did Crestline Biotech have as of Q2 2022?
+  Target : 10340
+  Predict: during
+  Noise  : low | Gate keep≈31%
+----------------------------------------------------------------------
+  Q: What market share did Meridian Logistics hold in Europe during Q3 2021?
+  Target : 13.6%
+  Predict: 136%
+  Noise  : medium | Gate keep≈31%
+----------------------------------------------------------------------
+
+======================================================================
+  GPU TRAINING COMPLETE
+======================================================================
+Total time: 8.2 minutes
+

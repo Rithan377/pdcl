@@ -1,0 +1,9 @@
+# PDCL v2 Requirements
+# =====================
+
+# Core numerical computing (required)
+numpy>=1.21.0
+
+# GPU acceleration (optional - install if you have NVIDIA CUDA)
+# Uncomment the line below if using GPU
+# cupy-cuda11x>=10.0.0  # Replace 11x with your CUDA version (e.g., cupy-cuda117)
