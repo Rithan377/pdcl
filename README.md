@@ -502,7 +502,7 @@ If you use PDCL in your research, experiments, or publications, please cite:
 ```bibtex
 @article{nandakumar2026pdcl,
   title   = {Parallel Dimensional Core Learning: A Library-Free Graph-Based Multidimensional Deep Learning Architecture with Compiler-Style Parallel Training, Adaptive Pruning, and Graph-Weighted Gradient Aggregation},
-  author  = {Nandakumar, Rithan},
+  author  = {Rithan Nandakumar},
   journal = {Department of Artificial Intelligence and Data Science, Anna University},
   year    = {2026},
   url     = {https://github.com/Rithan377/pdcl}
