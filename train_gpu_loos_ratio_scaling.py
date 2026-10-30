@@ -69,6 +69,7 @@ config = PDCLConfig(
     burst_freeze_threshold=0.02, # Soften freezing to prevent gradient starvation
     keep_batch_size_phase2=True, # Keep batch size stable at 4 in Phase 2
     max_phase2_lr=0.003,    # Cap Phase 2 learning rate to avoid divergence
+    unfreeze_after_pruning_epochs=10, # After 10 pruning epochs, unfreeze for fine-tuning
     
     # ─────────────────────────────────────────
     # Adaptive Soft Pruning

@@ -1,783 +1,542 @@
-
-  CPU Backend: NumPy (install cupy-cuda12x for GPU acceleration)
-
-
-======================================================================
-  PDCL GPU Training — RTX 4080 (11.5 GB VRAM)
-======================================================================
-
-Configuration:
-  • Dimensions       : 16
-  • d_model          : 128
-  • Batch size       : 2
-  • Train samples    : 200 (pre-tokenized to GPU)
-  • Val samples      : 40
-  • Epochs           : 20
-  • Steps/epoch      : 20
-
-======================================================================
-  STARTING GPU TRAINING
-======================================================================
-
-
-======================================================================
-  PDCL TRAINING — VALIDATING CONFIGURATION
-======================================================================
-
-✓ Configuration validated successfully
-  Dimensions: 16 | d_model: 128
-  Data: 200 train, 40 val
-  GPU: False
-
-Step 1: Loading tokenizer...
-Tokenizer loaded from ./tokenizer
-Vocab size: 8000 | Merges: 7952
-  ✓ Tokenizer loaded | Vocab: 8000
-
-Step 2: Loading data...
-  ✓ Data loaded | Train: 200 | Val: 40
-
-Step 3: Building master model...
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-  ✓ Master model created
-
-FeatureDimensionPruner initialized:
-  d_model              : 128
-  Prune range          : 10.0% → 35.0%
-  Warm-up epochs       : 3
-  EMA decay            : 0.95
-Step 4.5: Pre-tokenizing training data...
-
-======================================================================
-  PRE-TOKENIZATION TO GPU
-======================================================================
-  Samples  : 200
-  Device   : CPU (NumPy)
-  Valid    : 146/200 samples aligned
-  Skipped  : 54 (bad alignment)
-  RAM      : ~0.5 MB
-======================================================================
-
-  ✓ Pre-tokenization complete | GPU pinned: False
-    Total samples pre-cached: 200
-
-Step 5: Initializing parallel engine...
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-EmbeddingLayer initialized:
-  vocab_size    : 8000
-  d_model       : 128
-  max_pos       : 292
-  num_segments  : 2
-  Parameters    : 1,061,888
-DimensionSegmentation Layer initialized:
-  d_model       : 128
-  d_doc segment : 64
-  d_que segment : 64
-ParallelAttention initialized:
-  d_model  : 128
-  n_heads  : 4
-  Conn EMA : 0.95 | prune δ: 0.02
-GroupRelationDetector initialized:
-  d_model          : 128
-  pair_threshold   : 0.15
-  group_threshold  : 0.1
-  Active from epoch: 3
-AdaptiveSoftPruning initialized:
-  d_model        : 128
-  k_factor       : 0.5 (adaptive threshold = mean + k*std)
-  gate_sharpness : 3.0
-  Mode           : SOFT GATING — no tokens removed, all weighted
-
-CoreBurstBackprop initialized:
-  vocab_size   : 8000
-  d_model      : 128
-  burst β      : 2.0
-  k_factor     : 0.5 (adaptive soft pruning)
-CrossDimensionGraph initialized:
-  n_dimensions     : 16
-  d_model          : 128
-  correlation λ    : 0.5
-  Graph active at  : epoch 2
-ParallelDimensionEngine initialized:
-  Dimensions   : 16
-  Mode         : Pre-tokenized (GPU) ✓
-  Data splits  : [10, 10, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]
-  ✓ Parallel engine ready (16 dimensions)
-
-======================================================================
-  PDCL TRAINING — ALL COMPONENTS ACTIVE
-======================================================================
-  Model Config:
-    • Dimensions       : 16
-    • Epochs           : 20 × 20 steps
-    • d_model          : 128
-    • n_heads          : 4
-    • Batch size       : 2
-    • Learning rate    : 0.005
-
-  Burst Backprop:
-    • β (sharpness)    : 2.0
-
-  Soft Pruning (Adaptive):
-    • k_factor         : 0.5
-    • gate_sharpness   : 3.0
-
-  Feature Pruning:
-    • Range            : 10.0%→35.0%
-    • Warmup epochs    : 3
-
-  Connection Pruning:
-    • Threshold δ      : 0.02
-    • From epoch       : 3
-
-  Hardware:
-    • GPU              : False
-    • Answer matching  : fuzzy (edit distance ≤ 3)
-    • Bad samples      : skip (no poisoned targets)
-======================================================================
-
-Pre-tokenizing validation data...
-
-======================================================================
-  PRE-TOKENIZATION TO GPU
-======================================================================
-  Samples  : 40
-  Device   : CPU (NumPy)
-  Valid    : 27/40 samples aligned
-  Skipped  : 13 (bad alignment)
-  RAM      : ~0.1 MB
-======================================================================
-
-  ✓ Validation pre-tokenization complete
-
-Epoch  1/20 | Train: 5.5710 | Val Loss: 5.5460 | EM: 0.0% | F1: 0.0% | Time: 16.4s
-  Dims: D0:5.641 | D1:5.590 | D2:5.637 | D3:5.470 | D4:5.444 | D5:5.601 | D6:5.541 | D7:5.718 | D8:5.556 | D9:5.661 | D10:5.584 | D11:5.576 | D12:5.517 | D13:5.574 | D14:5.429 | D15:5.597
+Epoch  1/80 | Train: 5.2974 | Val Loss: 4.8383 | EM: 0.0% | F1: 0.0% | Time: 116.6s
+  Dims: D0:5.301 | D1:5.379 | D2:5.314 | D3:5.309 | D4:5.303 | D5:5.230 | D6:5.333 | D7:5.279 | D8:5.327 | D9:5.294 | D10:5.427 | D11:5.248 | D12:5.183 | D13:5.273 | D14:5.263 | D15:5.297
   PDCL: graph_edges: 0 | graph_max_corr: 0.0 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-Epoch  2/20 | Train: 5.5272 | Val Loss: 5.5345 | EM: 0.0% | F1: 0.0% | Time: 16.0s
-  Dims: D0:5.582 | D1:5.542 | D2:5.552 | D3:5.440 | D4:5.412 | D5:5.578 | D6:5.501 | D7:5.582 | D8:5.587 | D9:5.594 | D10:5.521 | D11:5.577 | D12:5.521 | D13:5.492 | D14:5.430 | D15:5.523
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.050000 (Val Loss Ratio: 1.000)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 4.8383 | EM: 0.0%
+Epoch  2/80 | Train: 4.2164 | Val Loss: 3.3208 | EM: 0.0% | F1: 0.0% | Time: 116.2s
+  Dims: D0:4.121 | D1:4.247 | D2:4.325 | D3:4.231 | D4:4.237 | D5:4.317 | D6:4.038 | D7:4.131 | D8:4.204 | D9:4.245 | D10:4.177 | D11:4.179 | D12:4.307 | D13:4.192 | D14:4.224 | D15:4.288
+  PDCL: graph_edges: 43 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.023554 (Val Loss Ratio: 0.686)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 3.3208 | EM: 0.0%
+Epoch  3/80 | Train: 3.2701 | Val Loss: 2.8018 | EM: 0.1% | F1: 0.1% | Time: 140.0s
+  Dims: D0:3.266 | D1:3.445 | D2:3.276 | D3:3.111 | D4:3.237 | D5:3.460 | D6:3.236 | D7:3.032 | D8:3.474 | D9:3.263 | D10:3.500 | D11:3.225 | D12:3.208 | D13:3.159 | D14:3.226 | D15:3.248
+  PDCL: graph_edges: 7 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.016768 (Val Loss Ratio: 0.579)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 2.8018 | EM: 0.1%
+Epoch  4/80 | Train: 2.8509 | Val Loss: 2.4933 | EM: 0.0% | F1: 0.0% | Time: 142.5s
+  Dims: D0:2.531 | D1:3.032 | D2:3.027 | D3:2.816 | D4:2.947 | D5:2.938 | D6:2.641 | D7:2.818 | D8:2.942 | D9:2.861 | D10:2.828 | D11:2.975 | D12:2.859 | D13:2.905 | D14:2.666 | D15:2.852
+  PDCL: graph_edges: 36 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.013278 (Val Loss Ratio: 0.515)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 2.4933 | EM: 0.0%
+Epoch  5/80 | Train: 2.5753 | Val Loss: 2.2771 | EM: 0.1% | F1: 0.1% | Time: 140.6s
+  Dims: D0:2.645 | D1:2.641 | D2:2.576 | D3:2.357 | D4:2.586 | D5:2.614 | D6:2.535 | D7:2.375 | D8:2.526 | D9:2.556 | D10:2.931 | D11:2.462 | D12:2.690 | D13:2.553 | D14:2.528 | D15:2.630
+  PDCL: graph_edges: 49 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.011075 (Val Loss Ratio: 0.471)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 2.2771 | EM: 0.1%
+Epoch  6/80 | Train: 2.3902 | Val Loss: 2.1092 | EM: 0.1% | F1: 0.1% | Time: 141.2s
+  Dims: D0:2.193 | D1:2.539 | D2:2.421 | D3:2.367 | D4:2.261 | D5:2.541 | D6:2.259 | D7:2.291 | D8:2.570 | D9:2.580 | D10:2.353 | D11:2.502 | D12:2.302 | D13:2.455 | D14:2.200 | D15:2.385
+  PDCL: graph_edges: 46 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.009502 (Val Loss Ratio: 0.436)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 2.1092 | EM: 0.1%
+Epoch  7/80 | Train: 2.2934 | Val Loss: 1.9768 | EM: 0.1% | F1: 0.1% | Time: 140.3s
+  Dims: D0:2.218 | D1:2.446 | D2:2.351 | D3:2.137 | D4:2.298 | D5:2.359 | D6:2.094 | D7:2.379 | D8:2.314 | D9:2.199 | D10:2.485 | D11:2.252 | D12:2.372 | D13:2.136 | D14:2.304 | D15:2.341
+  PDCL: graph_edges: 16 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.008347 (Val Loss Ratio: 0.409)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.9768 | EM: 0.1%
+Epoch  8/80 | Train: 2.1708 | Val Loss: 1.8679 | EM: 0.1% | F1: 0.1% | Time: 140.4s
+  Dims: D0:2.021 | D1:2.277 | D2:2.223 | D3:2.118 | D4:2.056 | D5:2.228 | D6:2.312 | D7:1.946 | D8:2.262 | D9:2.322 | D10:2.238 | D11:2.427 | D12:1.949 | D13:2.344 | D14:2.014 | D15:2.086
+  PDCL: graph_edges: 29 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.007452 (Val Loss Ratio: 0.386)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.8679 | EM: 0.1%
+Epoch  9/80 | Train: 1.9903 | Val Loss: 1.7677 | EM: 0.1% | F1: 0.1% | Time: 140.8s
+  Dims: D0:1.731 | D1:1.996 | D2:2.116 | D3:1.957 | D4:2.089 | D5:2.159 | D6:1.744 | D7:2.153 | D8:1.851 | D9:2.062 | D10:2.115 | D11:1.906 | D12:2.158 | D13:1.877 | D14:1.869 | D15:2.064
+  PDCL: graph_edges: 13 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.006674 (Val Loss Ratio: 0.365)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.7677 | EM: 0.1%
+Epoch 10/80 | Train: 1.9921 | Val Loss: 1.7029 | EM: 0.1% | F1: 0.1% | Time: 141.4s
+  Dims: D0:1.925 | D1:2.097 | D2:1.955 | D3:1.836 | D4:1.880 | D5:2.008 | D6:2.093 | D7:1.829 | D8:2.212 | D9:2.065 | D10:2.083 | D11:2.134 | D12:1.883 | D13:2.049 | D14:1.943 | D15:1.880
+  PDCL: graph_edges: 25 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.006194 (Val Loss Ratio: 0.352)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.7029 | EM: 0.1%
+Epoch 11/80 | Train: 1.8051 | Val Loss: 1.6657 | EM: 0.1% | F1: 0.1% | Time: 139.8s
+  Dims: D0:1.621 | D1:1.978 | D2:1.873 | D3:1.666 | D4:1.901 | D5:1.962 | D6:1.502 | D7:1.888 | D8:1.690 | D9:1.713 | D10:1.813 | D11:1.753 | D12:1.979 | D13:1.920 | D14:1.771 | D15:1.893
+  PDCL: graph_edges: 11 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.005926 (Val Loss Ratio: 0.344)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.6657 | EM: 0.1%
+Epoch 12/80 | Train: 1.8677 | Val Loss: 1.6001 | EM: 0.1% | F1: 0.1% | Time: 140.3s
+  Dims: D0:1.730 | D1:2.027 | D2:1.879 | D3:1.682 | D4:1.800 | D5:1.883 | D6:1.909 | D7:1.674 | D8:2.008 | D9:2.070 | D10:2.134 | D11:1.888 | D12:1.796 | D13:1.823 | D14:1.859 | D15:1.729
+  PDCL: graph_edges: 11 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.005469 (Val Loss Ratio: 0.331)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.6001 | EM: 0.1%
+Epoch 13/80 | Train: 1.7301 | Val Loss: 1.5382 | EM: 0.1% | F1: 0.1% | Time: 139.3s
+  Dims: D0:1.520 | D1:1.895 | D2:1.611 | D3:1.682 | D4:1.665 | D5:1.885 | D6:1.565 | D7:1.774 | D8:1.812 | D9:1.809 | D10:1.910 | D11:1.644 | D12:1.888 | D13:1.756 | D14:1.582 | D15:1.704
+  PDCL: graph_edges: 31 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.005054 (Val Loss Ratio: 0.318)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.5382 | EM: 0.1%
+Epoch 14/80 | Train: 1.7590 | Val Loss: 1.5289 | EM: 0.1% | F1: 0.1% | Time: 140.4s
+  Dims: D0:1.690 | D1:1.698 | D2:1.838 | D3:1.652 | D4:1.722 | D5:1.808 | D6:1.927 | D7:1.682 | D8:1.817 | D9:1.865 | D10:1.930 | D11:1.775 | D12:1.696 | D13:1.677 | D14:1.622 | D15:1.716
+  PDCL: graph_edges: 22 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.004993 (Val Loss Ratio: 0.316)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.5289 | EM: 0.1%
+Epoch 15/80 | Train: 1.6351 | Val Loss: 1.4951 | EM: 0.1% | F1: 0.1% | Time: 138.1s
+  Dims: D0:1.541 | D1:1.755 | D2:1.635 | D3:1.541 | D4:1.662 | D5:1.651 | D6:1.406 | D7:1.765 | D8:1.698 | D9:1.736 | D10:1.603 | D11:1.624 | D12:1.696 | D13:1.630 | D14:1.574 | D15:1.584
+  PDCL: graph_edges: 18 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.004775 (Val Loss Ratio: 0.309)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.4951 | EM: 0.1%
+Epoch 16/80 | Train: 1.6670 | Val Loss: 1.4622 | EM: 0.1% | F1: 0.1% | Time: 139.4s
+  Dims: D0:1.546 | D1:1.679 | D2:1.657 | D3:1.464 | D4:1.696 | D5:1.867 | D6:1.593 | D7:1.624 | D8:1.644 | D9:1.657 | D10:1.989 | D11:1.735 | D12:1.722 | D13:1.644 | D14:1.635 | D15:1.532
+  PDCL: graph_edges: 42 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.004567 (Val Loss Ratio: 0.302)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.4622 | EM: 0.1%
+Epoch 17/80 | Train: 1.5853 | Val Loss: 1.3965 | EM: 0.1% | F1: 0.1% | Time: 140.4s
+  Dims: D0:1.348 | D1:1.772 | D2:1.736 | D3:1.678 | D4:1.516 | D5:1.554 | D6:1.447 | D7:1.640 | D8:1.614 | D9:1.750 | D10:1.588 | D11:1.560 | D12:1.529 | D13:1.680 | D14:1.428 | D15:1.527
+  PDCL: graph_edges: 13 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.004165 (Val Loss Ratio: 0.289)
+  🎯 PHASE 2 ACTIVATED — Model matured at epoch 17
+     Loss reduction: 70.1% | EM: 0.1% | F1: 0.1%
+     → Core Burst Freezing: ON
+     → Feature/Connection Pruning: ON
+     → Batch size per dimension: 4
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.3965 | EM: 0.1%
+Epoch 18/80 | Train: 1.5367 | Val Loss: 1.3761 | EM: 0.1% | F1: 0.1% | Time: 163.6s
+  Dims: D0:1.467 | D1:1.498 | D2:1.422 | D3:1.357 | D4:1.488 | D5:1.785 | D6:1.385 | D7:1.417 | D8:1.515 | D9:1.556 | D10:1.871 | D11:1.570 | D12:1.662 | D13:1.515 | D14:1.527 | D15:1.573
+  PDCL: feature_sparsity: 0.0 | conn_pruned: 0 | conn_threshold: 0.0 | graph_edges: 13 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.284)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.3761 | EM: 0.1%
+Epoch 19/80 | Train: 1.5258 | Val Loss: 1.3552 | EM: 0.1% | F1: 0.1% | Time: 165.7s
+  Dims: D0:1.335 | D1:1.652 | D2:1.659 | D3:1.482 | D4:1.493 | D5:1.606 | D6:1.550 | D7:1.589 | D8:1.449 | D9:1.628 | D10:1.575 | D11:1.610 | D12:1.468 | D13:1.630 | D14:1.284 | D15:1.433
+  PDCL: feature_sparsity: 0.0 | conn_pruned: 0 | conn_threshold: 0.0 | graph_edges: 16 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.280)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.3552 | EM: 0.1%
+Epoch 20/80 | Train: 1.4988 | Val Loss: 1.3696 | EM: 0.1% | F1: 0.1% | Time: 163.6s
+  Dims: D0:1.471 | D1:1.572 | D2:1.518 | D3:1.344 | D4:1.502 | D5:1.444 | D6:1.409 | D7:1.564 | D8:1.508 | D9:1.411 | D10:1.740 | D11:1.419 | D12:1.729 | D13:1.470 | D14:1.449 | D15:1.434
+  PDCL: feature_sparsity: 0.0 | conn_pruned: 0 | conn_threshold: 0.0 | graph_edges: 15 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.283)
+Epoch 21/80 | Train: 1.5773 | Val Loss: 1.3554 | EM: 0.1% | F1: 0.1% | Time: 166.1s
+  Dims: D0:1.497 | D1:1.644 | D2:1.613 | D3:1.607 | D4:1.469 | D5:1.684 | D6:1.643 | D7:1.454 | D8:1.701 | D9:1.844 | D10:1.677 | D11:1.691 | D12:1.396 | D13:1.518 | D14:1.372 | D15:1.419
+  PDCL: feature_sparsity: 0.0 | conn_pruned: 0 | conn_threshold: 0.0 | graph_edges: 27 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.280)
+Epoch 22/80 | Train: 1.4708 | Val Loss: 1.3416 | EM: 0.1% | F1: 0.1% | Time: 162.7s
+  Dims: D0:1.297 | D1:1.493 | D2:1.429 | D3:1.304 | D4:1.534 | D5:1.520 | D6:1.337 | D7:1.679 | D8:1.365 | D9:1.505 | D10:1.655 | D11:1.429 | D12:1.661 | D13:1.418 | D14:1.431 | D15:1.464
+  PDCL: feature_sparsity: 0.0 | conn_pruned: 0 | conn_threshold: 0.0 | graph_edges: 30 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.277)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.3416 | EM: 0.1%
+Epoch 23/80 | Train: 1.5001 | Val Loss: 2.7458 | EM: 0.1% | F1: 0.1% | Time: 163.2s
+  Dims: D0:1.436 | D1:1.582 | D2:1.475 | D3:1.440 | D4:1.490 | D5:1.553 | D6:1.542 | D7:1.279 | D8:1.541 | D9:1.652 | D10:1.599 | D11:1.549 | D12:1.407 | D13:1.591 | D14:1.548 | D15:1.347
+  PDCL: feature_sparsity: 0.0 | conn_pruned: 258773 | conn_threshold: 0.004 | graph_edges: 27 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.568)
+Epoch 24/80 | Train: 2.1437 | Val Loss: 1.8035 | EM: 0.1% | F1: 0.1% | Time: 164.7s
+  Dims: D0:1.963 | D1:2.342 | D2:2.307 | D3:2.119 | D4:2.118 | D5:2.313 | D6:1.822 | D7:2.138 | D8:2.045 | D9:2.282 | D10:2.223 | D11:2.075 | D12:2.102 | D13:2.207 | D14:2.239 | D15:1.976
+  PDCL: feature_sparsity: 0.0 | conn_pruned: 0 | conn_threshold: 0.0 | graph_edges: 34 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.373)
+Epoch 25/80 | Train: 2.0046 | Val Loss: 1.6913 | EM: 0.1% | F1: 0.1% | Time: 166.6s
+  Dims: D0:2.033 | D1:2.161 | D2:1.816 | D3:1.946 | D4:1.915 | D5:1.955 | D6:2.026 | D7:1.947 | D8:2.293 | D9:2.103 | D10:2.088 | D11:2.039 | D12:1.854 | D13:2.003 | D14:2.029 | D15:1.858
+  PDCL: feature_sparsity: 0.0 | conn_pruned: 0 | conn_threshold: 0.0 | graph_edges: 34 | graph_max_corr: 0.999 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.350)
+Epoch 26/80 | Train: 1.8397 | Val Loss: 1.6029 | EM: 0.1% | F1: 0.1% | Time: 165.6s
+  Dims: D0:1.550 | D1:2.135 | D2:1.893 | D3:1.945 | D4:1.904 | D5:1.939 | D6:1.651 | D7:1.888 | D8:1.774 | D9:1.973 | D10:1.817 | D11:1.760 | D12:1.822 | D13:1.839 | D14:1.714 | D15:1.776
+  PDCL: feature_sparsity: 0.0 | conn_pruned: 0 | conn_threshold: 0.0 | graph_edges: 42 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.331)
+Epoch 27/80 | Train: 1.8130 | Val Loss: 1.5558 | EM: 0.1% | F1: 0.1% | Time: 166.7s
+  Dims: D0:1.805 | D1:2.001 | D2:1.921 | D3:1.769 | D4:1.744 | D5:1.785 | D6:1.997 | D7:1.745 | D8:1.912 | D9:1.808 | D10:1.892 | D11:1.750 | D12:1.673 | D13:1.802 | D14:1.744 | D15:1.639
+  PDCL: feature_sparsity: 0.0 | conn_pruned: 0 | conn_threshold: 0.0 | graph_edges: 46 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.322)
+  🔓 PHASE 3 — Unfreezing all weights for fine-tuning (after 10 pruning epochs)
+     → Core Burst Freezing: OFF
+     → Feature/Connection Pruning: OFF
+     → Pruned connections remain pruned
+     → All remaining weights are now trainable
+Epoch 28/80 | Train: 1.6787 | Val Loss: 1.4991 | EM: 0.1% | F1: 0.1% | Time: 142.2s
+  Dims: D0:1.420 | D1:1.876 | D2:1.790 | D3:1.687 | D4:1.637 | D5:1.713 | D6:1.535 | D7:1.663 | D8:1.620 | D9:1.815 | D10:1.740 | D11:1.684 | D12:1.840 | D13:1.806 | D14:1.542 | D15:1.531
+  PDCL: graph_edges: 60 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.310)
+Epoch 29/80 | Train: 1.7229 | Val Loss: 1.4637 | EM: 0.1% | F1: 0.1% | Time: 142.3s
+  Dims: D0:1.756 | D1:1.798 | D2:1.661 | D3:1.556 | D4:1.636 | D5:1.726 | D6:1.883 | D7:1.567 | D8:1.960 | D9:1.786 | D10:1.773 | D11:1.872 | D12:1.685 | D13:1.587 | D14:1.673 | D15:1.640
+  PDCL: graph_edges: 25 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.303)
+Epoch 30/80 | Train: 1.6312 | Val Loss: 1.4441 | EM: 0.1% | F1: 0.1% | Time: 142.8s
+  Dims: D0:1.437 | D1:1.792 | D2:1.954 | D3:1.704 | D4:1.448 | D5:1.658 | D6:1.446 | D7:1.651 | D8:1.653 | D9:1.838 | D10:1.641 | D11:1.447 | D12:1.730 | D13:1.742 | D14:1.419 | D15:1.579
+  PDCL: graph_edges: 43 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.298)
+Epoch 31/80 | Train: 1.6197 | Val Loss: 1.4169 | EM: 0.1% | F1: 0.1% | Time: 141.7s
+  Dims: D0:1.695 | D1:1.639 | D2:1.552 | D3:1.521 | D4:1.681 | D5:1.639 | D6:1.561 | D7:1.350 | D8:1.757 | D9:1.551 | D10:1.845 | D11:1.612 | D12:1.729 | D13:1.516 | D14:1.677 | D15:1.590
+  PDCL: graph_edges: 38 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.293)
+Epoch 32/80 | Train: 1.5748 | Val Loss: 1.3874 | EM: 0.1% | F1: 0.1% | Time: 142.7s
+  Dims: D0:1.443 | D1:1.628 | D2:1.784 | D3:1.508 | D4:1.323 | D5:1.673 | D6:1.446 | D7:1.781 | D8:1.595 | D9:1.667 | D10:1.610 | D11:1.516 | D12:1.442 | D13:1.714 | D14:1.482 | D15:1.580
+  PDCL: graph_edges: 36 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.287)
+Epoch 33/80 | Train: 1.5544 | Val Loss: 1.3380 | EM: 0.1% | F1: 0.1% | Time: 141.3s
+  Dims: D0:1.400 | D1:1.703 | D2:1.461 | D3:1.549 | D4:1.636 | D5:1.614 | D6:1.389 | D7:1.448 | D8:1.565 | D9:1.582 | D10:1.686 | D11:1.533 | D12:1.646 | D13:1.465 | D14:1.663 | D15:1.522
+  PDCL: graph_edges: 27 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.277)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.3380 | EM: 0.1%
+Epoch 34/80 | Train: 1.5895 | Val Loss: 1.3168 | EM: 0.1% | F1: 0.1% | Time: 142.6s
+  Dims: D0:1.548 | D1:1.683 | D2:1.696 | D3:1.493 | D4:1.425 | D5:1.650 | D6:1.578 | D7:1.496 | D8:1.597 | D9:1.751 | D10:1.650 | D11:1.692 | D12:1.407 | D13:1.668 | D14:1.506 | D15:1.569
+  PDCL: graph_edges: 46 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.272)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.3168 | EM: 0.1%
+Epoch 35/80 | Train: 1.5051 | Val Loss: 1.2967 | EM: 0.1% | F1: 0.1% | Time: 141.8s
+  Dims: D0:1.346 | D1:1.569 | D2:1.628 | D3:1.502 | D4:1.562 | D5:1.528 | D6:1.306 | D7:1.527 | D8:1.505 | D9:1.483 | D10:1.661 | D11:1.534 | D12:1.611 | D13:1.387 | D14:1.541 | D15:1.418
+  PDCL: graph_edges: 24 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.268)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.2967 | EM: 0.1%
+Epoch 36/80 | Train: 1.4720 | Val Loss: 1.3184 | EM: 0.1% | F1: 0.1% | Time: 142.7s
+  Dims: D0:1.372 | D1:1.500 | D2:1.398 | D3:1.394 | D4:1.385 | D5:1.607 | D6:1.529 | D7:1.437 | D8:1.591 | D9:1.580 | D10:1.556 | D11:1.475 | D12:1.349 | D13:1.489 | D14:1.452 | D15:1.469
+  PDCL: graph_edges: 20 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.272)
+Epoch 37/80 | Train: 1.4076 | Val Loss: 1.2522 | EM: 0.1% | F1: 0.1% | Time: 141.6s
+  Dims: D0:1.220 | D1:1.374 | D2:1.600 | D3:1.359 | D4:1.306 | D5:1.474 | D6:1.208 | D7:1.446 | D8:1.397 | D9:1.488 | D10:1.532 | D11:1.453 | D12:1.538 | D13:1.364 | D14:1.352 | D15:1.384
+  PDCL: graph_edges: 51 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.259)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.2522 | EM: 0.1%
+Epoch 38/80 | Train: 1.4459 | Val Loss: 1.2411 | EM: 0.1% | F1: 0.1% | Time: 141.6s
+  Dims: D0:1.370 | D1:1.551 | D2:1.412 | D3:1.369 | D4:1.321 | D5:1.451 | D6:1.588 | D7:1.370 | D8:1.543 | D9:1.531 | D10:1.504 | D11:1.502 | D12:1.366 | D13:1.417 | D14:1.442 | D15:1.398
+  PDCL: graph_edges: 38 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.257)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.2411 | EM: 0.1%
+Epoch 39/80 | Train: 1.3608 | Val Loss: 1.2500 | EM: 0.1% | F1: 0.1% | Time: 141.0s
+  Dims: D0:1.242 | D1:1.498 | D2:1.468 | D3:1.320 | D4:1.318 | D5:1.462 | D6:1.283 | D7:1.330 | D8:1.300 | D9:1.339 | D10:1.431 | D11:1.379 | D12:1.444 | D13:1.357 | D14:1.269 | D15:1.352
+  PDCL: graph_edges: 20 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.258)
+Epoch 40/80 | Train: 1.4193 | Val Loss: 1.2045 | EM: 0.1% | F1: 0.1% | Time: 142.2s
+  Dims: D0:1.332 | D1:1.436 | D2:1.468 | D3:1.409 | D4:1.243 | D5:1.515 | D6:1.556 | D7:1.314 | D8:1.548 | D9:1.530 | D10:1.592 | D11:1.465 | D12:1.376 | D13:1.411 | D14:1.204 | D15:1.290
+  PDCL: graph_edges: 43 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.249)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.2045 | EM: 0.1%
+Epoch 41/80 | Train: 1.3580 | Val Loss: 1.1927 | EM: 0.1% | F1: 0.1% | Time: 147.9s
+  Dims: D0:1.236 | D1:1.479 | D2:1.497 | D3:1.336 | D4:1.303 | D5:1.423 | D6:1.204 | D7:1.334 | D8:1.293 | D9:1.445 | D10:1.455 | D11:1.294 | D12:1.364 | D13:1.521 | D14:1.321 | D15:1.222
+  PDCL: graph_edges: 49 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.247)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.1927 | EM: 0.1%
+Epoch 42/80 | Train: 1.3598 | Val Loss: 1.1668 | EM: 0.1% | F1: 0.1% | Time: 140.7s
+  Dims: D0:1.271 | D1:1.384 | D2:1.362 | D3:1.279 | D4:1.210 | D5:1.385 | D6:1.515 | D7:1.364 | D8:1.462 | D9:1.351 | D10:1.472 | D11:1.483 | D12:1.410 | D13:1.231 | D14:1.272 | D15:1.325
+  PDCL: graph_edges: 13 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002908 (Val Loss Ratio: 0.241)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.1668 | EM: 0.1%
+Epoch 43/80 | Train: 1.3090 | Val Loss: 1.1919 | EM: 0.1% | F1: 0.1% | Time: 141.0s
+  Dims: D0:1.183 | D1:1.514 | D2:1.392 | D3:1.348 | D4:1.188 | D5:1.406 | D6:1.145 | D7:1.383 | D8:1.292 | D9:1.500 | D10:1.305 | D11:1.203 | D12:1.327 | D13:1.470 | D14:1.157 | D15:1.147
+  PDCL: graph_edges: 16 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.003000 (Val Loss Ratio: 0.246)
+Epoch 44/80 | Train: 1.2945 | Val Loss: 1.1432 | EM: 0.1% | F1: 0.1% | Time: 140.8s
+  Dims: D0:1.226 | D1:1.295 | D2:1.244 | D3:1.265 | D4:1.339 | D5:1.411 | D6:1.297 | D7:1.161 | D8:1.364 | D9:1.268 | D10:1.504 | D11:1.342 | D12:1.286 | D13:1.159 | D14:1.326 | D15:1.223
+  PDCL: graph_edges: 31 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002792 (Val Loss Ratio: 0.236)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.1432 | EM: 0.1%
+Epoch 45/80 | Train: 1.2746 | Val Loss: 1.1393 | EM: 0.1% | F1: 0.1% | Time: 140.8s
+  Dims: D0:1.059 | D1:1.394 | D2:1.432 | D3:1.369 | D4:1.125 | D5:1.328 | D6:1.192 | D7:1.416 | D8:1.326 | D9:1.353 | D10:1.357 | D11:1.130 | D12:1.181 | D13:1.444 | D14:1.151 | D15:1.156
+  PDCL: graph_edges: 34 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002772 (Val Loss Ratio: 0.235)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.1393 | EM: 0.1%
+Epoch 46/80 | Train: 1.2553 | Val Loss: 1.1554 | EM: 0.1% | F1: 0.1% | Time: 138.6s
+  Dims: D0:1.168 | D1:1.301 | D2:1.238 | D3:1.204 | D4:1.245 | D5:1.231 | D6:1.129 | D7:1.165 | D8:1.269 | D9:1.324 | D10:1.439 | D11:1.314 | D12:1.389 | D13:1.129 | D14:1.285 | D15:1.251
+  PDCL: graph_edges: 25 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002851 (Val Loss Ratio: 0.239)
+Epoch 47/80 | Train: 1.2881 | Val Loss: 1.1314 | EM: 0.1% | F1: 0.1% | Time: 142.3s
+  Dims: D0:1.243 | D1:1.366 | D2:1.451 | D3:1.404 | D4:1.135 | D5:1.311 | D6:1.268 | D7:1.263 | D8:1.300 | D9:1.317 | D10:1.325 | D11:1.280 | D12:1.223 | D13:1.337 | D14:1.141 | D15:1.245
+  PDCL: graph_edges: 30 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002734 (Val Loss Ratio: 0.234)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.1314 | EM: 0.1%
+Epoch 48/80 | Train: 1.2051 | Val Loss: 1.1199 | EM: 0.1% | F1: 0.1% | Time: 140.9s
+  Dims: D0:1.134 | D1:1.215 | D2:1.206 | D3:1.185 | D4:1.181 | D5:1.211 | D6:1.068 | D7:1.281 | D8:1.163 | D9:1.189 | D10:1.422 | D11:1.290 | D12:1.344 | D13:1.066 | D14:1.120 | D15:1.179
+  PDCL: graph_edges: 27 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002679 (Val Loss Ratio: 0.231)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.1199 | EM: 0.1%
+Epoch 49/80 | Train: 1.2576 | Val Loss: 1.1203 | EM: 0.1% | F1: 0.1% | Time: 141.3s
+  Dims: D0:1.181 | D1:1.330 | D2:1.354 | D3:1.206 | D4:1.202 | D5:1.375 | D6:1.355 | D7:1.080 | D8:1.386 | D9:1.380 | D10:1.203 | D11:1.219 | D12:1.052 | D13:1.287 | D14:1.225 | D15:1.276
+  PDCL: graph_edges: 25 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002681 (Val Loss Ratio: 0.232)
+Epoch 50/80 | Train: 1.1954 | Val Loss: 1.0937 | EM: 0.1% | F1: 0.1% | Time: 139.9s
+  Dims: D0:1.028 | D1:1.267 | D2:1.274 | D3:1.201 | D4:1.225 | D5:1.388 | D6:0.986 | D7:1.213 | D8:1.059 | D9:1.149 | D10:1.366 | D11:1.230 | D12:1.240 | D13:1.186 | D14:1.113 | D15:1.209
+  PDCL: graph_edges: 36 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002555 (Val Loss Ratio: 0.226)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.0937 | EM: 0.1%
+Epoch 51/80 | Train: 1.2302 | Val Loss: 1.1316 | EM: 0.1% | F1: 0.1% | Time: 140.6s
+  Dims: D0:1.205 | D1:1.270 | D2:1.207 | D3:1.151 | D4:1.171 | D5:1.177 | D6:1.293 | D7:1.100 | D8:1.290 | D9:1.285 | D10:1.272 | D11:1.307 | D12:1.105 | D13:1.315 | D14:1.246 | D15:1.280
+  PDCL: graph_edges: 22 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002735 (Val Loss Ratio: 0.234)
+Epoch 52/80 | Train: 1.1786 | Val Loss: 1.1094 | EM: 0.1% | F1: 0.1% | Time: 139.7s
+  Dims: D0:1.093 | D1:1.228 | D2:1.387 | D3:1.160 | D4:1.202 | D5:1.257 | D6:0.978 | D7:1.197 | D8:1.162 | D9:1.153 | D10:1.182 | D11:1.285 | D12:1.329 | D13:1.098 | D14:1.006 | D15:1.108
+  PDCL: graph_edges: 27 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002629 (Val Loss Ratio: 0.229)
+Epoch 53/80 | Train: 1.2559 | Val Loss: 1.1089 | EM: 0.1% | F1: 0.1% | Time: 140.6s
+  Dims: D0:1.137 | D1:1.261 | D2:1.202 | D3:1.238 | D4:1.121 | D5:1.391 | D6:1.316 | D7:1.125 | D8:1.393 | D9:1.383 | D10:1.413 | D11:1.239 | D12:1.285 | D13:1.314 | D14:1.172 | D15:1.115
+  PDCL: graph_edges: 36 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002626 (Val Loss Ratio: 0.229)
+Epoch 54/80 | Train: 1.1504 | Val Loss: 1.0676 | EM: 0.1% | F1: 0.1% | Time: 140.0s
+  Dims: D0:1.020 | D1:1.305 | D2:1.308 | D3:1.125 | D4:1.197 | D5:1.237 | D6:1.038 | D7:1.098 | D8:1.034 | D9:1.197 | D10:1.247 | D11:1.065 | D12:1.166 | D13:1.161 | D14:1.093 | D15:1.134
+  PDCL: graph_edges: 38 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002435 (Val Loss Ratio: 0.221)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.0676 | EM: 0.1%
+Epoch 55/80 | Train: 1.1925 | Val Loss: 1.0560 | EM: 0.1% | F1: 0.1% | Time: 140.2s
+  Dims: D0:1.187 | D1:1.296 | D2:1.267 | D3:1.059 | D4:1.127 | D5:1.318 | D6:1.202 | D7:1.179 | D8:1.222 | D9:1.239 | D10:1.228 | D11:1.228 | D12:1.136 | D13:1.093 | D14:1.155 | D15:1.183
+  PDCL: graph_edges: 21 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002382 (Val Loss Ratio: 0.218)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.0560 | EM: 0.1%
+Epoch 56/80 | Train: 1.1097 | Val Loss: 1.0775 | EM: 0.1% | F1: 0.1% | Time: 140.8s
+  Dims: D0:1.075 | D1:1.224 | D2:1.146 | D3:1.044 | D4:1.086 | D5:0.992 | D6:0.992 | D7:1.106 | D8:1.132 | D9:1.249 | D10:1.143 | D11:1.071 | D12:1.136 | D13:1.140 | D14:1.155 | D15:1.082
+  PDCL: graph_edges: 13 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002480 (Val Loss Ratio: 0.223)
+Epoch 57/80 | Train: 1.1270 | Val Loss: 1.0911 | EM: 0.1% | F1: 0.1% | Time: 139.8s
+  Dims: D0:1.137 | D1:1.156 | D2:1.109 | D3:1.026 | D4:0.991 | D5:1.229 | D6:1.127 | D7:0.991 | D8:1.147 | D9:1.160 | D10:1.329 | D11:1.140 | D12:1.157 | D13:1.049 | D14:1.183 | D15:1.107
+  PDCL: graph_edges: 15 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002543 (Val Loss Ratio: 0.226)
+Epoch 58/80 | Train: 1.1616 | Val Loss: 1.0832 | EM: 0.1% | F1: 0.1% | Time: 140.5s
+  Dims: D0:1.011 | D1:1.239 | D2:1.326 | D3:1.234 | D4:1.027 | D5:1.192 | D6:1.084 | D7:1.181 | D8:1.242 | D9:1.134 | D10:1.258 | D11:1.115 | D12:1.167 | D13:1.294 | D14:1.000 | D15:1.120
+  PDCL: graph_edges: 25 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002506 (Val Loss Ratio: 0.224)
+Epoch 59/80 | Train: 1.1180 | Val Loss: 1.0332 | EM: 0.1% | F1: 0.1% | Time: 140.7s
+  Dims: D0:1.049 | D1:1.227 | D2:1.080 | D3:1.023 | D4:1.028 | D5:1.235 | D6:1.024 | D7:1.042 | D8:1.165 | D9:1.056 | D10:1.264 | D11:1.305 | D12:1.166 | D13:1.041 | D14:1.076 | D15:1.145
+  PDCL: graph_edges: 16 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002280 (Val Loss Ratio: 0.214)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.0332 | EM: 0.1%
+Epoch 60/80 | Train: 1.1077 | Val Loss: 1.0228 | EM: 0.1% | F1: 0.1% | Time: 141.6s
+  Dims: D0:0.967 | D1:1.165 | D2:1.268 | D3:1.178 | D4:1.034 | D5:1.158 | D6:1.065 | D7:1.140 | D8:1.136 | D9:1.182 | D10:1.166 | D11:1.081 | D12:0.958 | D13:1.114 | D14:1.012 | D15:1.093
+  PDCL: graph_edges: 13 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002234 (Val Loss Ratio: 0.211)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 1.0228 | EM: 0.1%
+Epoch 61/80 | Train: 1.0805 | Val Loss: 1.0350 | EM: 0.1% | F1: 0.1% | Time: 141.4s
+  Dims: D0:1.102 | D1:1.106 | D2:1.116 | D3:1.024 | D4:1.034 | D5:1.104 | D6:0.982 | D7:1.141 | D8:1.036 | D9:1.102 | D10:1.181 | D11:1.118 | D12:1.299 | D13:0.905 | D14:1.037 | D15:1.031
+  PDCL: graph_edges: 16 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002288 (Val Loss Ratio: 0.214)
+Epoch 62/80 | Train: 1.1068 | Val Loss: 0.9813 | EM: 0.1% | F1: 0.1% | Time: 142.1s
+  Dims: D0:0.968 | D1:1.159 | D2:1.077 | D3:1.134 | D4:0.953 | D5:1.184 | D6:1.212 | D7:1.014 | D8:1.219 | D9:1.196 | D10:1.149 | D11:1.201 | D12:0.941 | D13:1.229 | D14:0.968 | D15:1.072
+  PDCL: graph_edges: 27 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002057 (Val Loss Ratio: 0.203)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 0.9813 | EM: 0.1%
+Epoch 63/80 | Train: 1.0619 | Val Loss: 1.0303 | EM: 0.1% | F1: 0.1% | Time: 143.3s
+  Dims: D0:0.925 | D1:1.151 | D2:1.207 | D3:1.102 | D4:1.188 | D5:1.192 | D6:0.823 | D7:1.003 | D8:0.998 | D9:1.154 | D10:1.059 | D11:1.001 | D12:1.160 | D13:0.932 | D14:1.018 | D15:1.056
+  PDCL: graph_edges: 28 | graph_max_corr: 0.992 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002267 (Val Loss Ratio: 0.213)
+Epoch 64/80 | Train: 1.1078 | Val Loss: 1.0069 | EM: 0.1% | F1: 0.1% | Time: 143.0s
+  Dims: D0:1.069 | D1:1.175 | D2:1.249 | D3:1.016 | D4:1.008 | D5:1.052 | D6:1.123 | D7:1.041 | D8:1.247 | D9:1.196 | D10:1.209 | D11:1.159 | D12:0.992 | D13:1.018 | D14:1.120 | D15:1.051
+  PDCL: graph_edges: 7 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002166 (Val Loss Ratio: 0.208)
+Epoch 65/80 | Train: 1.0289 | Val Loss: 1.0191 | EM: 0.1% | F1: 0.1% | Time: 140.9s
+  Dims: D0:0.906 | D1:1.147 | D2:1.171 | D3:0.960 | D4:1.023 | D5:1.066 | D6:0.804 | D7:0.991 | D8:0.967 | D9:1.096 | D10:1.119 | D11:1.006 | D12:1.167 | D13:1.123 | D14:0.893 | D15:1.001
+  PDCL: graph_edges: 20 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002218 (Val Loss Ratio: 0.211)
+Epoch 66/80 | Train: 1.0989 | Val Loss: 0.9598 | EM: 0.1% | F1: 0.1% | Time: 140.7s
+  Dims: D0:1.041 | D1:1.196 | D2:1.052 | D3:1.074 | D4:1.130 | D5:1.083 | D6:1.186 | D7:1.008 | D8:1.182 | D9:1.200 | D10:1.188 | D11:1.139 | D12:1.055 | D13:1.124 | D14:0.982 | D15:0.951
+  PDCL: graph_edges: 13 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.001967 (Val Loss Ratio: 0.198)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 0.9598 | EM: 0.1%
+Epoch 67/80 | Train: 1.0197 | Val Loss: 0.9680 | EM: 0.1% | F1: 0.1% | Time: 143.6s
+  Dims: D0:0.923 | D1:1.136 | D2:1.100 | D3:1.025 | D4:1.036 | D5:1.158 | D6:0.877 | D7:1.020 | D8:0.895 | D9:0.985 | D10:1.137 | D11:1.001 | D12:1.045 | D13:1.095 | D14:0.846 | D15:0.997
+  PDCL: graph_edges: 20 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002002 (Val Loss Ratio: 0.200)
+Epoch 68/80 | Train: 1.0637 | Val Loss: 0.9641 | EM: 0.1% | F1: 0.1% | Time: 145.7s
+  Dims: D0:1.016 | D1:1.172 | D2:1.125 | D3:1.042 | D4:1.042 | D5:1.104 | D6:1.151 | D7:0.934 | D8:1.090 | D9:1.065 | D10:1.118 | D11:1.089 | D12:1.022 | D13:0.992 | D14:1.000 | D15:1.049
+  PDCL: graph_edges: 36 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.001985 (Val Loss Ratio: 0.199)
+Epoch 69/80 | Train: 1.0461 | Val Loss: 0.9549 | EM: 0.1% | F1: 0.1% | Time: 146.3s
+  Dims: D0:0.974 | D1:1.164 | D2:1.204 | D3:1.060 | D4:1.023 | D5:1.091 | D6:0.881 | D7:1.004 | D8:1.023 | D9:1.169 | D10:1.087 | D11:0.945 | D12:1.111 | D13:1.080 | D14:0.965 | D15:1.030
+  PDCL: graph_edges: 13 | graph_max_corr: 0.994 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.001948 (Val Loss Ratio: 0.197)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 0.9549 | EM: 0.1%
+Epoch 70/80 | Train: 1.0240 | Val Loss: 0.9645 | EM: 0.1% | F1: 0.1% | Time: 145.4s
+  Dims: D0:0.940 | D1:1.104 | D2:1.107 | D3:1.005 | D4:0.997 | D5:1.245 | D6:0.946 | D7:0.904 | D8:1.139 | D9:0.940 | D10:1.083 | D11:1.040 | D12:0.998 | D13:1.030 | D14:0.992 | D15:0.924
+  PDCL: graph_edges: 27 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.001987 (Val Loss Ratio: 0.199)
+Epoch 71/80 | Train: 1.0163 | Val Loss: 0.9711 | EM: 0.1% | F1: 0.1% | Time: 145.2s
+  Dims: D0:0.879 | D1:1.104 | D2:1.185 | D3:1.171 | D4:0.932 | D5:1.021 | D6:0.934 | D7:1.007 | D8:1.017 | D9:1.105 | D10:1.085 | D11:1.012 | D12:0.971 | D13:1.093 | D14:0.805 | D15:0.950
+  PDCL: graph_edges: 38 | graph_max_corr: 0.994 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002014 (Val Loss Ratio: 0.201)
+Epoch 72/80 | Train: 1.0093 | Val Loss: 0.9842 | EM: 0.1% | F1: 0.1% | Time: 143.6s
+  Dims: D0:0.951 | D1:1.073 | D2:0.931 | D3:0.879 | D4:0.928 | D5:1.146 | D6:0.937 | D7:0.909 | D8:1.042 | D9:1.023 | D10:1.163 | D11:1.129 | D12:1.103 | D13:0.903 | D14:1.013 | D15:0.971
+  PDCL: graph_edges: 31 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002069 (Val Loss Ratio: 0.203)
+Epoch 73/80 | Train: 1.0551 | Val Loss: 0.9480 | EM: 0.1% | F1: 0.1% | Time: 144.5s
+  Dims: D0:0.941 | D1:1.167 | D2:1.283 | D3:1.105 | D4:0.982 | D5:0.998 | D6:1.021 | D7:1.056 | D8:1.014 | D9:1.085 | D10:1.110 | D11:1.119 | D12:0.827 | D13:1.148 | D14:0.950 | D15:1.038
   PDCL: graph_edges: 16 | graph_max_corr: 0.994 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
-Epoch  3/20 | Train: 5.4917 | Val Loss: 5.4989 | EM: 0.0% | F1: 0.0% | Time: 16.8s
-  Dims: D0:5.492 | D1:5.484 | D2:5.553 | D3:5.446 | D4:5.327 | D5:5.563 | D6:5.450 | D7:5.579 | D8:5.598 | D9:5.546 | D10:5.492 | D11:5.533 | D12:5.456 | D13:5.461 | D14:5.445 | D15:5.471
-  PDCL: feature_sparsity: 0.1016 | conn_pruned: 90335 | graph_edges: 58 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-Epoch  4/20 | Train: 5.4454 | Val Loss: 5.4915 | EM: 0.0% | F1: 0.0% | Time: 16.7s
-  Dims: D0:5.456 | D1:5.482 | D2:5.554 | D3:5.291 | D4:5.247 | D5:5.462 | D6:5.426 | D7:5.610 | D8:5.467 | D9:5.581 | D10:5.413 | D11:5.460 | D12:5.498 | D13:5.382 | D14:5.353 | D15:5.409
-  PDCL: feature_sparsity: 0.2109 | conn_pruned: 90340 | graph_edges: 25 | graph_max_corr: 0.928 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
-Epoch  5/20 | Train: 5.4280 | Val Loss: 5.4844 | EM: 0.0% | F1: 0.0% | Time: 16.8s
-  Dims: D0:5.418 | D1:5.475 | D2:5.539 | D3:5.289 | D4:5.319 | D5:5.377 | D6:5.315 | D7:5.550 | D8:5.516 | D9:5.552 | D10:5.462 | D11:5.414 | D12:5.436 | D13:5.394 | D14:5.390 | D15:5.393
-  PDCL: feature_sparsity: 0.3125 | conn_pruned: 90364 | graph_edges: 31 | graph_max_corr: 0.994 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-Epoch  6/20 | Train: 5.3535 | Val Loss: 5.4777 | EM: 0.0% | F1: 0.0% | Time: 21.9s
-  Dims: D0:5.273 | D1:5.361 | D2:5.502 | D3:5.150 | D4:5.148 | D5:5.319 | D6:5.248 | D7:5.511 | D8:5.540 | D9:5.443 | D10:5.365 | D11:5.448 | D12:5.392 | D13:5.352 | D14:5.355 | D15:5.288
-  PDCL: feature_sparsity: 0.4141 | conn_pruned: 90391 | graph_edges: 21 | graph_max_corr: 0.928 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
-Epoch  7/20 | Train: 5.3077 | Val Loss: 5.4562 | EM: 0.0% | F1: 0.0% | Time: 18.3s
-  Dims: D0:5.132 | D1:5.237 | D2:5.451 | D3:5.065 | D4:5.174 | D5:5.232 | D6:5.183 | D7:5.467 | D8:5.535 | D9:5.512 | D10:5.356 | D11:5.345 | D12:5.300 | D13:5.236 | D14:5.347 | D15:5.392
-  PDCL: feature_sparsity: 0.5078 | conn_pruned: 90394 | graph_edges: 38 | graph_max_corr: 0.796 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-Epoch  8/20 | Train: 5.2271 | Val Loss: 5.4417 | EM: 0.0% | F1: 0.0% | Time: 17.5s
-  Dims: D0:5.088 | D1:5.138 | D2:5.440 | D3:4.886 | D4:4.972 | D5:5.132 | D6:5.134 | D7:5.351 | D8:5.594 | D9:5.435 | D10:5.267 | D11:5.317 | D12:5.136 | D13:5.263 | D14:5.316 | D15:5.168
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90396 | graph_edges: 38 | graph_max_corr: 0.904 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
-Epoch  9/20 | Train: 5.1549 | Val Loss: 5.3901 | EM: 0.0% | F1: 0.0% | Time: 19.0s
-  Dims: D0:4.926 | D1:5.151 | D2:5.400 | D3:4.792 | D4:4.907 | D5:5.023 | D6:4.960 | D7:5.404 | D8:5.545 | D9:5.337 | D10:5.390 | D11:5.186 | D12:5.069 | D13:5.074 | D14:5.230 | D15:5.045
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90398 | graph_edges: 46 | graph_max_corr: 0.904 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-Epoch 10/20 | Train: 5.0183 | Val Loss: 5.3515 | EM: 0.0% | F1: 0.0% | Time: 17.6s
-  Dims: D0:4.833 | D1:4.992 | D2:5.162 | D3:4.628 | D4:4.744 | D5:4.905 | D6:4.723 | D7:5.307 | D8:5.640 | D9:5.076 | D10:5.304 | D11:4.995 | D12:5.037 | D13:5.019 | D14:5.152 | D15:4.816
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90419 | graph_edges: 30 | graph_max_corr: 0.928 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
-Epoch 11/20 | Train: 4.9130 | Val Loss: 5.3267 | EM: 0.0% | F1: 0.0% | Time: 18.9s
-  Dims: D0:4.704 | D1:4.802 | D2:5.227 | D3:4.501 | D4:4.677 | D5:4.662 | D6:4.566 | D7:5.182 | D8:5.528 | D9:4.966 | D10:5.177 | D11:5.046 | D12:4.717 | D13:4.856 | D14:5.192 | D15:4.815
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90421 | graph_edges: 34 | graph_max_corr: 0.947 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-Epoch 12/20 | Train: 4.8126 | Val Loss: 5.3039 | EM: 0.0% | F1: 0.0% | Time: 18.4s
-  Dims: D0:4.572 | D1:4.792 | D2:5.080 | D3:4.373 | D4:4.468 | D5:4.469 | D6:4.431 | D7:5.103 | D8:5.544 | D9:4.747 | D10:5.062 | D11:4.848 | D12:4.869 | D13:4.768 | D14:5.201 | D15:4.668
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90422 | graph_edges: 31 | graph_max_corr: 0.967 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
-Epoch 13/20 | Train: 4.7298 | Val Loss: 5.2798 | EM: 0.0% | F1: 0.0% | Time: 17.9s
-  Dims: D0:4.519 | D1:4.675 | D2:5.234 | D3:4.134 | D4:4.389 | D5:4.443 | D6:4.213 | D7:5.101 | D8:5.500 | D9:4.730 | D10:5.070 | D11:4.810 | D12:4.478 | D13:4.607 | D14:5.104 | D15:4.585
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90422 | graph_edges: 25 | graph_max_corr: 0.967 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-Epoch 14/20 | Train: 4.6131 | Val Loss: 5.2642 | EM: 0.0% | F1: 0.0% | Time: 21.3s
-  Dims: D0:4.392 | D1:4.672 | D2:4.946 | D3:4.045 | D4:4.244 | D5:4.255 | D6:4.163 | D7:5.031 | D8:5.434 | D9:4.530 | D10:4.887 | D11:4.663 | D12:4.536 | D13:4.475 | D14:4.999 | D15:4.573
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90422 | graph_edges: 42 | graph_max_corr: 0.977 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
-Epoch 15/20 | Train: 4.4857 | Val Loss: 5.2465 | EM: 0.0% | F1: 0.0% | Time: 19.2s
-  Dims: D0:4.262 | D1:4.455 | D2:4.885 | D3:3.881 | D4:4.234 | D5:4.055 | D6:4.091 | D7:4.787 | D8:5.512 | D9:4.389 | D10:4.935 | D11:4.517 | D12:4.344 | D13:4.282 | D14:5.000 | D15:4.438
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90422 | graph_edges: 27 | graph_max_corr: 0.977 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-Epoch 16/20 | Train: 4.3766 | Val Loss: 5.2295 | EM: 0.0% | F1: 0.0% | Time: 20.1s
-  Dims: D0:4.181 | D1:4.404 | D2:4.825 | D3:3.725 | D4:3.987 | D5:3.986 | D6:3.845 | D7:4.893 | D8:5.550 | D9:4.259 | D10:4.628 | D11:4.425 | D12:4.002 | D13:4.243 | D14:4.769 | D15:4.280
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90422 | graph_edges: 20 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
-Epoch 17/20 | Train: 4.2947 | Val Loss: 5.2092 | EM: 0.0% | F1: 0.0% | Time: 23.3s
-  Dims: D0:4.057 | D1:4.320 | D2:4.634 | D3:3.620 | D4:4.041 | D5:3.800 | D6:3.925 | D7:4.778 | D8:5.193 | D9:3.968 | D10:4.809 | D11:4.308 | D12:3.943 | D13:4.029 | D14:5.002 | D15:4.234
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90423 | graph_edges: 36 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-Epoch 18/20 | Train: 4.1635 | Val Loss: 5.1888 | EM: 0.0% | F1: 0.0% | Time: 25.0s
-  Dims: D0:3.892 | D1:4.144 | D2:4.605 | D3:3.537 | D4:3.726 | D5:3.591 | D6:3.473 | D7:4.669 | D8:5.367 | D9:3.758 | D10:4.581 | D11:4.206 | D12:4.006 | D13:3.966 | D14:4.900 | D15:4.229
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90423 | graph_edges: 27 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
-Epoch 19/20 | Train: 4.0386 | Val Loss: 5.1652 | EM: 0.0% | F1: 0.0% | Time: 25.0s
-  Dims: D0:3.794 | D1:4.101 | D2:4.414 | D3:3.212 | D4:3.574 | D5:3.408 | D6:3.590 | D7:4.636 | D8:5.231 | D9:3.565 | D10:4.387 | D11:4.100 | D12:3.649 | D13:3.822 | D14:4.846 | D15:4.065
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90423 | graph_edges: 20 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-Epoch 20/20 | Train: 3.9197 | Val Loss: 5.1452 | EM: 0.0% | F1: 0.0% | Time: 25.6s
-  Dims: D0:3.738 | D1:3.950 | D2:4.435 | D3:3.088 | D4:3.371 | D5:3.275 | D6:3.220 | D7:4.565 | D8:5.205 | D9:3.343 | D10:4.290 | D11:4.034 | D12:3.562 | D13:3.771 | D14:4.757 | D15:4.091
-  PDCL: feature_sparsity: 0.5938 | conn_pruned: 90423 | graph_edges: 51 | graph_max_corr: 0.987 | effective_keep_rate: 0.309
-  ⚠ Val: skipped 13 samples (alignment)
-  ⚠ Failed to save best checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained_best.pkl.npz'
-⚠ Failed to save checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.001919 (Val Loss Ratio: 0.196)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 0.9480 | EM: 0.1%
+Epoch 74/80 | Train: 1.0056 | Val Loss: 0.9284 | EM: 0.1% | F1: 0.1% | Time: 143.4s
+  Dims: D0:0.881 | D1:1.134 | D2:0.957 | D3:0.963 | D4:0.987 | D5:1.097 | D6:0.954 | D7:0.943 | D8:1.071 | D9:1.061 | D10:1.132 | D11:0.938 | D12:1.106 | D13:0.899 | D14:0.995 | D15:0.956
+  PDCL: graph_edges: 31 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.001841 (Val Loss Ratio: 0.192)
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl
+  🏆 New best val_loss: 0.9284 | EM: 0.1%
+Epoch 75/80 | Train: 1.0297 | Val Loss: 1.0080 | EM: 0.1% | F1: 0.1% | Time: 146.5s
+  Dims: D0:0.902 | D1:1.045 | D2:1.139 | D3:0.987 | D4:0.881 | D5:1.153 | D6:1.048 | D7:1.004 | D8:1.046 | D9:1.148 | D10:1.073 | D11:1.112 | D12:0.897 | D13:1.020 | D14:0.961 | D15:1.014
+  PDCL: graph_edges: 51 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002170 (Val Loss Ratio: 0.208)
+Epoch 76/80 | Train: 1.0033 | Val Loss: 0.9745 | EM: 0.1% | F1: 0.1% | Time: 153.6s
+  Dims: D0:0.950 | D1:1.029 | D2:1.032 | D3:1.019 | D4:0.938 | D5:1.050 | D6:0.831 | D7:1.000 | D8:0.959 | D9:1.005 | D10:1.150 | D11:0.968 | D12:1.103 | D13:0.957 | D14:1.043 | D15:1.008
+  PDCL: graph_edges: 29 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.002028 (Val Loss Ratio: 0.201)
+Epoch 77/80 | Train: 1.0199 | Val Loss: 0.9389 | EM: 0.1% | F1: 0.1% | Time: 156.8s
+  Dims: D0:0.912 | D1:0.940 | D2:1.102 | D3:1.006 | D4:0.945 | D5:0.997 | D6:0.983 | D7:0.978 | D8:1.165 | D9:1.114 | D10:1.044 | D11:1.082 | D12:0.942 | D13:1.012 | D14:1.012 | D15:1.067
+  PDCL: graph_edges: 42 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.001883 (Val Loss Ratio: 0.194)
+Epoch 78/80 | Train: 0.9717 | Val Loss: 0.9337 | EM: 0.1% | F1: 0.1% | Time: 159.2s
+  Dims: D0:0.920 | D1:1.016 | D2:1.007 | D3:0.897 | D4:0.915 | D5:1.043 | D6:0.762 | D7:0.891 | D8:0.984 | D9:1.046 | D10:1.116 | D11:1.018 | D12:1.111 | D13:1.002 | D14:0.875 | D15:0.973
+  PDCL: graph_edges: 48 | graph_max_corr: 0.998 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.001862 (Val Loss Ratio: 0.193)
+Epoch 79/80 | Train: 1.0177 | Val Loss: 0.9370 | EM: 0.1% | F1: 0.1% | Time: 159.8s
+  Dims: D0:0.945 | D1:1.033 | D2:1.018 | D3:1.030 | D4:0.967 | D5:0.984 | D6:1.006 | D7:0.963 | D8:1.101 | D9:1.174 | D10:1.042 | D11:0.973 | D12:0.911 | D13:1.047 | D14:1.011 | D15:1.067
+  PDCL: graph_edges: 42 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.001875 (Val Loss Ratio: 0.194)
+Epoch 80/80 | Train: 0.9530 | Val Loss: 0.9305 | EM: 0.1% | F1: 0.1% | Time: 175.4s
+  Dims: D0:0.848 | D1:1.069 | D2:1.061 | D3:0.992 | D4:0.929 | D5:1.020 | D6:0.777 | D7:0.951 | D8:0.856 | D9:0.951 | D10:1.036 | D11:0.968 | D12:1.019 | D13:0.922 | D14:0.982 | D15:0.872
+  PDCL: graph_edges: 18 | graph_max_corr: 0.997 | effective_keep_rate: 0.309
+  ⚠ Val: skipped 781 samples (alignment)
+  ⚡ Dynamic LR Adjusted: 0.001849 (Val Loss Ratio: 0.192)
 
 ======================================================================
 TRAINING COMPLETE
 ======================================================================
-Final Val EM : 0.0%
-Final Val F1 : 0.0%
-Avg Feature Sparsity: 59.4%
-⚠ Failed to save final checkpoint: [Errno 2] No such file or directory: './checkpoints/pdcl_gpu_trained.pkl.npz'
+Final Val EM : 97.6%
+Final Val F1 : 99.7%
+Avg Feature Sparsity: 0.0%
+Checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio.pkl
+✓ Final checkpoint saved to ./checkpoints/pdcl_gpu_trained_loss_ratio.pkl
 
 Example Predictions:
 ----------------------------------------------------------------------
-  [skipped: Could not align answer '846,000,000' to document tokens. Exact match failed, fuzzy match failed (edit distance > 3). This sample will be skipped.]
-  Q: What was Halcyon Technologies's operating margin in Q4 2023?
-  Target : 11.6%
-  Predict: performance
-  Noise  : medium | Gate keep≈31%
-----------------------------------------------------------------------
-  Q: What was Crestline Biotech's total revenue in Q1 2021?
-  Target : 157,200,000
-  Predict: 0.7%
+  Q: Report the churn percentage for Sable Logistics during Q1 2020.
+  Target : 24.5%
+  Predict: 24.5%
   Noise  : low | Gate keep≈31%
 ----------------------------------------------------------------------
-  Q: What market share did Pinnacle Dynamics hold in Europe during Q3 2021?
-  Target : 35.3%
-  Predict: 3
-  Noise  : medium | Gate keep≈31%
+  [skipped: Could not align answer '62.86' to document tokens. Exact match failed, fuzzy match failed (edit distance > 3). This sample will be skipped.]
+  [skipped: Could not align answer '2,534,407' to document tokens. Exact match failed, fuzzy match failed (edit distance > 3). This sample will be skipped.]
+  [skipped: Could not align answer '22609' to document tokens. Exact match failed, fuzzy match failed (edit distance > 3). This sample will be skipped.]
+  Q: What was Keystone Bridge Corp's year-over-year growth rate in Q1 2021?
+  Target : 38.4%
+  Predict: 38.4%
+  Noise  : high | Gate keep≈31%
 ----------------------------------------------------------------------
-  Q: How many employees did Crestline Biotech have as of Q2 2022?
-  Target : 10340
-  Predict: during
-  Noise  : low | Gate keep≈31%
+  [skipped: Could not align answer '631.53' to document tokens. Exact match failed, fuzzy match failed (edit distance > 3). This sample will be skipped.]
+  Q: How much net income did Cirrus Cloud Systems earn in Q3 2022?
+  Target : 1,261,000,000
+  Predict: $1,261,000,000
+  Noise  : high | Gate keep≈31%
 ----------------------------------------------------------------------
-  Q: What market share did Meridian Logistics hold in Europe during Q3 2021?
-  Target : 13.6%
-  Predict: 136%
+  Q: What was Tundra Refrigeration's research and development expenditure in Q3 2023?
+  Target : 112,000,000
+  Predict: $112,000,000
+  Noise  : high | Gate keep≈31%
+----------------------------------------------------------------------
+  [skipped: Could not align answer '3,393,320' to document tokens. Exact match failed, fuzzy match failed (edit distance > 3). This sample will be skipped.]
+  Q: How many customers did Terravolt Power serve in Q4 2020?
+  Target : 2,055,864
+  Predict: 64
   Noise  : medium | Gate keep≈31%
 ----------------------------------------------------------------------
 
 ======================================================================
   GPU TRAINING COMPLETE
 ======================================================================
-Total time: 8.2 minutes
-
+Total time: 197.2 minutes
+[GPU Final] Used: 9.46 GB / 11.60 GB (81.6%) | Free: 2.14 GB

@@ -142,8 +142,9 @@ class AdaptiveSoftPruning:
         p_que = c_que @ self.W_q          # (B, d)
 
         # ── 3. Relevance scores per token ──
-        # dot product between each doc token and the question context
-        scores = np.sum(p_doc * p_que[:, np.newaxis, :], axis=-1)  # (B, T_doc)
+        # Batched GEMV: (B, T_doc, d) @ (B, d, 1) → (B, T_doc, 1) → squeeze
+        # Avoids creating (B, T_doc, d) broadcast intermediate from element-wise multiply.
+        scores = (p_doc @ p_que[:, :, np.newaxis]).squeeze(-1)  # (B, T_doc)
 
         # ── 4. Adaptive threshold (per document, adapts to score distribution) ──
         mean_s = np.mean(scores, axis=1, keepdims=True)   # (B, 1)
@@ -244,12 +245,17 @@ class AdaptiveSoftPruning:
         d_scores = d_scores_from_gate + d_scores_from_mean + d_scores_from_std  # (B, T_doc)
 
         # ── Step 5: Backward through score computation ──
-        # scores = sum(p_doc * p_que[:, None, :], axis=-1)
+        # scores = (p_doc @ p_que[:,:,None]).squeeze(-1)
+        # d_p_doc: (B, T_doc, 1) outer (B, 1, d) → broadcast handled by matmul chain
         d_p_doc = d_scores[:, :, np.newaxis] * p_que[:, np.newaxis, :]  # (B, T_doc, d)
-        d_p_que = np.sum(d_scores[:, :, np.newaxis] * p_doc, axis=1)    # (B, d)
+        # d_p_que via batched GEMV: (B, 1, T_doc) @ (B, T_doc, d) → (B, 1, d) → squeeze
+        d_p_que = (d_scores[:, np.newaxis, :] @ p_doc).squeeze(1)       # (B, d)
 
         # ── Step 6: Backward through projection matrices W_d and W_q ──
-        self.dW_d += np.sum(out_doc.transpose(0, 2, 1) @ d_p_doc, axis=0)
+        # Flattened 2D GEMM: (B*T_doc, d).T @ (B*T_doc, d) → (d, d)
+        flat_od  = out_doc.reshape(-1, self.d_model)   # (B*T_doc, d)
+        flat_dpd = d_p_doc.reshape(-1, self.d_model)   # (B*T_doc, d)
+        self.dW_d += flat_od.T @ flat_dpd
         self.dW_q += c_que.T @ d_p_que
 
         d_out_doc_from_proj = d_p_doc @ self.W_d.T       # (B, T_doc, d)

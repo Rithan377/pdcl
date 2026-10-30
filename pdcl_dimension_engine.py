@@ -130,10 +130,15 @@ def _zero_master_grad(master: CoreBurstBackprop) -> None:
 def _accumulate_gradients(master: CoreBurstBackprop,
                            clone: CoreBurstBackprop,
                            weight: float) -> None:
-    """Add clone's gradients * weight into master's gradient buffers."""
+    """Add clone's gradients * weight into master's gradient buffers.
+
+    Pure GPU in-place fused multiply-add (AXPY): m_buf += c_buf * w.
+    Both buffers are already device arrays — zero PCI-e transfers needed.
+    """
+    w = np.float32(weight)
 
     def _add(m_buf, c_buf):
-        m_buf += to_device(_cpu_np.array(to_cpu(c_buf)) * weight)
+        m_buf += c_buf * w
 
     # Embedding
     _add(master.embed.dE_token, clone.embed.dE_token)
@@ -265,6 +270,9 @@ def _sync_weights_to_clone(master: CoreBurstBackprop,
     ]:
         _cp(m_a.W_q, c_a.W_q); _cp(m_a.W_k, c_a.W_k)
         _cp(m_a.W_v, c_a.W_v); _cp(m_a.W_o, c_a.W_o)
+        # Sync connection pruning masks so clones train with the same
+        # sparse attention topology that the master validates with.
+        c_a.conn_mask = m_a.conn_mask
 
     _cp(master.attention.W_fusion, clone.attention.W_fusion)
     _cp(master.prune.W_d,     clone.prune.W_d)
@@ -526,11 +534,20 @@ class ParallelDimensionEngine:
     def execute_parallel_step(self,
                                lr: float,
                                clip_norm: float = 1.0,
-                               batch_size: int = 4) -> Tuple[float, List[float]]:
+                               batch_size: int = 4,
+                               feature_pruner=None) -> Tuple[float, List[float]]:
         """
         Run all D dimensions simultaneously.
         Aggregate gradients with graph-weighted averaging.
         Update master model.
+
+        Args:
+            lr          : learning rate
+            clip_norm   : gradient clipping norm
+            batch_size  : samples per dimension per step
+            feature_pruner : optional FeatureDimensionPruner; if provided,
+                             gradient masks are applied before the weight update
+                             to prevent pruned features from reviving.
 
         Returns:
             global_loss : weighted average loss across dimensions
@@ -563,6 +580,11 @@ class ParallelDimensionEngine:
             _, clone = results[d]
             _accumulate_gradients(self.master, clone, weight=float(agg_weights[d]))
 
+        # Zero out gradients on pruned feature columns before the weight
+        # update so that accumulated clone gradients cannot revive dead features.
+        if feature_pruner is not None:
+            feature_pruner.apply_gradient_masks(self.master)
+
         # ── Single synchronized master update ──
         self.master.update(lr=lr, clip_norm=clip_norm)
 
@@ -580,3 +602,36 @@ class ParallelDimensionEngine:
         corr = self.graph.compute_graph(epoch)
         summary = self.graph.get_graph_summary()
         return summary
+
+    def aggregate_attention_ema(self):
+        """
+        Average the attention EMA from all dimension clones and write
+        the result back to the master model.
+
+        Because each clone only sees its own data partition, its attn_ema
+        reflects only a slice of the training distribution.  Averaging
+        across clones gives the master a representative whole-dataset EMA
+        before connection pruning decisions are made at epoch boundaries.
+        """
+        sub_attn_names = ['doc_self_attn', 'que_self_attn', 'que_doc_cross_attn']
+        for name in sub_attn_names:
+            master_sub = getattr(self.master.attention, name)
+
+            # Collect non-None EMAs from clones
+            clone_emas = []
+            for clone in self.dim_models:
+                clone_sub = getattr(clone.attention, name)
+                if clone_sub.attn_ema is not None:
+                    clone_emas.append(clone_sub.attn_ema)
+
+            if not clone_emas:
+                continue
+
+            # All EMAs must have the same shape to be averaged
+            ref_shape = clone_emas[0].shape
+            compatible = [e for e in clone_emas if e.shape == ref_shape]
+            if not compatible:
+                continue
+
+            avg_ema = np.mean(np.stack(compatible, axis=0), axis=0)
+            master_sub.attn_ema = avg_ema

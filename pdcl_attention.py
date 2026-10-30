@@ -100,7 +100,7 @@ class MultiHeadAttention:
 
         self._cache = {}
 
-    def forward(self, q_in, k_in, v_in):
+    def forward(self, q_in, k_in, v_in, training=True):
         B, T_q, _ = q_in.shape
         _, T_k, _ = k_in.shape
 
@@ -130,23 +130,28 @@ class MultiHeadAttention:
         out = O_concat @ self.W_o
 
         # ── Update EMA of attention weights for connection pruning ──
-        # Average over batch dimension first: (H, T_q, T_k)
-        A_mean_cpu = _cpu_np.array(to_cpu(A)).mean(axis=0)
+        # Only update during training to prevent validation data from
+        # polluting the running average used for pruning decisions.
+        if training:
+            # Average over batch dimension first: (H, T_q, T_k)
+            # Stays entirely on GPU — no PCI-e transfer per forward pass.
+            A_mean = A.mean(axis=0)   # (H, T_q, T_k) on device
 
-        if self.attn_ema is None:
-            self.attn_ema = A_mean_cpu.copy()
-        else:
-            # EMA update — only for same-sized sequences
-            if self.attn_ema.shape == A_mean_cpu.shape:
-                self.attn_ema = (
-                    self.conn_ema_decay * self.attn_ema +
-                    (1.0 - self.conn_ema_decay) * A_mean_cpu
-                )
+            if self.attn_ema is None:
+                self.attn_ema = A_mean.copy()
             else:
-                # Sequence length changed — reset
-                self.attn_ema = A_mean_cpu.copy()
+                # EMA update — only for same-sized sequences
+                if self.attn_ema.shape == A_mean.shape:
+                    alpha = np.float32(self.conn_ema_decay)
+                    self.attn_ema = (
+                        alpha * self.attn_ema +
+                        (np.float32(1.0) - alpha) * A_mean
+                    )
+                else:
+                    # Sequence length changed — reset
+                    self.attn_ema = A_mean.copy()
 
-        self.conn_step += 1
+            self.conn_step += 1
 
         self._cache = {
             'q_in': q_in, 'k_in': k_in, 'v_in': v_in,
@@ -163,39 +168,82 @@ class MultiHeadAttention:
         """
         return self._cache.get('A', None)
 
-    def update_connection_mask(self, threshold: Optional[float] = None) -> int:
+    def update_connection_mask(self, threshold: Optional[float] = None,
+                               max_prune_rate: float = 0.10) -> int:
         """
         Called at epoch boundaries.
         Builds a sparse mask by permanently zeroing connections with EMA < threshold.
 
+        Pruning is capped at max_prune_rate fraction of TOTAL connections per
+        call to prevent catastrophic one-shot pruning.
+
+        Args:
+            threshold      : EMA value below which connections are pruned
+            max_prune_rate : max fraction of total connections that can be
+                             newly pruned in this single call (default 10%)
+
         Returns:
-            n_pruned : number of connections pruned
+            n_pruned : number of connections pruned (cumulative, not just new)
         """
         if self.attn_ema is None:
             return 0
 
         delta = threshold if threshold is not None else self.conn_threshold
 
-        # Build mask: 1 where connection is active, 0 where pruned
-        new_mask_cpu = (self.attn_ema >= delta).astype(_cpu_np.float32)
+        # Pull EMA from GPU to CPU once per epoch boundary call
+        attn_ema_cpu = _cpu_np.array(to_cpu(self.attn_ema))
+        total_connections = attn_ema_cpu.size
 
-        # Respect existing mask (once pruned, always pruned)
+        # How many connections are currently active?
         if self.conn_mask is not None:
             existing_mask_cpu = _cpu_np.array(to_cpu(self.conn_mask))
-            new_mask_cpu = new_mask_cpu * existing_mask_cpu
+            currently_active = int((existing_mask_cpu > 0.5).sum())
+        else:
+            existing_mask_cpu = None
+            currently_active = total_connections
 
-        # Safety: never prune more than 70% of connections
-        active_frac = new_mask_cpu.mean()
+        # Build candidate mask: 1 where connection survives, 0 where pruned
+        candidate_mask = (attn_ema_cpu >= delta).astype(_cpu_np.float32)
+
+        # Respect existing mask (once pruned, always pruned)
+        if existing_mask_cpu is not None:
+            candidate_mask = candidate_mask * existing_mask_cpu
+
+        proposed_active = int((candidate_mask > 0.5).sum())
+        new_to_prune = currently_active - proposed_active
+        max_allowed = int(total_connections * max_prune_rate)
+
+        # ── Per-step cap: if threshold wants to prune too many, only
+        #    prune the weakest `max_allowed` active connections ──
+        if new_to_prune > max_allowed and max_allowed > 0:
+            # Get EMA values of currently-active connections only
+            if existing_mask_cpu is not None:
+                active_positions = existing_mask_cpu > 0.5
+            else:
+                active_positions = _cpu_np.ones_like(attn_ema_cpu, dtype=bool)
+
+            active_emas = attn_ema_cpu[active_positions]
+
+            # Sort ascending — we want to prune only the weakest max_allowed
+            sorted_emas = _cpu_np.sort(active_emas)
+            # The cutoff: everything below this value gets pruned
+            cutoff = sorted_emas[min(max_allowed, len(sorted_emas) - 1)]
+
+            candidate_mask = (attn_ema_cpu >= cutoff).astype(_cpu_np.float32)
+            if existing_mask_cpu is not None:
+                candidate_mask = candidate_mask * existing_mask_cpu
+
+        # Safety floor: never let active fraction drop below 30%
+        active_frac = candidate_mask.mean()
         if active_frac < 0.30:
-            # Too aggressive — only prune the bottom 30%
-            flat = self.attn_ema.flatten()
+            flat = attn_ema_cpu.flatten()
             safe_threshold = _cpu_np.percentile(flat, 30)
-            new_mask_cpu = (self.attn_ema >= safe_threshold).astype(_cpu_np.float32)
+            candidate_mask = (attn_ema_cpu >= safe_threshold).astype(_cpu_np.float32)
 
-        H, T_q, T_k = new_mask_cpu.shape
-        n_pruned = int((new_mask_cpu < 0.5).sum())
+        H, T_q, T_k = candidate_mask.shape
+        n_pruned = int((candidate_mask < 0.5).sum())
 
-        self.conn_mask = np.array(new_mask_cpu)
+        self.conn_mask = np.array(candidate_mask)
         return n_pruned
 
     def backward(self, d_out):
@@ -208,7 +256,12 @@ class MultiHeadAttention:
         B, T_q, _ = q_in.shape
         _, T_k, _ = k_in.shape
 
-        self.dW_o += np.sum(O_concat.transpose(0, 2, 1) @ d_out, axis=0)
+        # ── dW_o: Flatten to 2D GEMM instead of 3D batch matmul + reduce ──
+        # sum(O_concat.T @ d_out, axis=0) ≡ flat_O.T @ flat_d_out  [single cuBLAS GEMM]
+        flat_Oc  = O_concat.reshape(-1, self.d_model)  # (B*T_q, d)
+        flat_dout = d_out.reshape(-1, self.d_model)     # (B*T_q, d)
+        self.dW_o += flat_Oc.T @ flat_dout
+
         d_O_concat = d_out @ self.W_o.T
 
         d_O = d_O_concat.reshape(B, T_q, self.n_heads, self.d_head).transpose(0, 2, 1, 3)
@@ -229,9 +282,18 @@ class MultiHeadAttention:
         d_K_proj = d_K.transpose(0, 2, 1, 3).reshape(B, T_k, self.d_model)
         d_V_proj = d_V.transpose(0, 2, 1, 3).reshape(B, T_k, self.d_model)
 
-        self.dW_q += np.sum(q_in.transpose(0, 2, 1) @ d_Q_proj, axis=0)
-        self.dW_k += np.sum(k_in.transpose(0, 2, 1) @ d_K_proj, axis=0)
-        self.dW_v += np.sum(v_in.transpose(0, 2, 1) @ d_V_proj, axis=0)
+        # ── dW_q/k/v: Flatten to 2D GEMM — avoids 3D intermediate allocation ──
+        flat_q = q_in.reshape(-1, self.d_model)       # (B*T_q, d)
+        flat_dQ = d_Q_proj.reshape(-1, self.d_model)   # (B*T_q, d)
+        self.dW_q += flat_q.T @ flat_dQ
+
+        flat_k = k_in.reshape(-1, self.d_model)       # (B*T_k, d)
+        flat_dK = d_K_proj.reshape(-1, self.d_model)   # (B*T_k, d)
+        self.dW_k += flat_k.T @ flat_dK
+
+        flat_v = v_in.reshape(-1, self.d_model)       # (B*T_k, d)
+        flat_dV = d_V_proj.reshape(-1, self.d_model)   # (B*T_k, d)
+        self.dW_v += flat_v.T @ flat_dV
 
         d_q_in = d_Q_proj @ self.W_q.T
         d_k_in = d_K_proj @ self.W_k.T
@@ -284,10 +346,10 @@ class ParallelAttention:
         print(f"  n_heads  : {n_heads}")
         print(f"  Conn EMA : {conn_ema_decay} | prune δ: {conn_prune_threshold}")
 
-    def forward(self, seq_doc, seq_que):
-        doc_self  = self.doc_self_attn.forward(seq_doc, seq_doc, seq_doc)
-        que_self  = self.que_self_attn.forward(seq_que, seq_que, seq_que)
-        que_cross = self.que_doc_cross_attn.forward(que_self, doc_self, doc_self)
+    def forward(self, seq_doc, seq_que, training=True):
+        doc_self  = self.doc_self_attn.forward(seq_doc, seq_doc, seq_doc, training=training)
+        que_self  = self.que_self_attn.forward(seq_que, seq_que, seq_que, training=training)
+        que_cross = self.que_doc_cross_attn.forward(que_self, doc_self, doc_self, training=training)
 
         que_concat = np.concatenate([que_self, que_cross], axis=-1)
         out_que = que_concat @ self.W_fusion
@@ -307,23 +369,26 @@ class ParallelAttention:
         """
         return self.doc_self_attn.get_last_attn_weights()
 
-    def update_connection_masks(self, threshold=None) -> Dict:
+    def update_connection_masks(self, threshold=None, max_prune_rate=0.10) -> Dict:
         """
         Update sparse connection masks for all three attention modules.
         Called at epoch boundaries.
         Returns count of pruned connections per module.
         """
         return {
-            'doc_self'  : self.doc_self_attn.update_connection_mask(threshold),
-            'que_self'  : self.que_self_attn.update_connection_mask(threshold),
-            'cross_attn': self.que_doc_cross_attn.update_connection_mask(threshold),
+            'doc_self'  : self.doc_self_attn.update_connection_mask(threshold, max_prune_rate),
+            'que_self'  : self.que_self_attn.update_connection_mask(threshold, max_prune_rate),
+            'cross_attn': self.que_doc_cross_attn.update_connection_mask(threshold, max_prune_rate),
         }
 
     def backward(self, d_out_doc, d_out_que):
         cache = self._cache
         que_concat = cache['que_concat']
 
-        self.dW_fusion += np.sum(que_concat.transpose(0, 2, 1) @ d_out_que, axis=0)
+        # Flattened 2D GEMM for dW_fusion — avoids 3D intermediate
+        flat_qc  = que_concat.reshape(-1, que_concat.shape[-1])  # (B*T_que, 2*d)
+        flat_dq  = d_out_que.reshape(-1, self.d_model)            # (B*T_que, d)
+        self.dW_fusion += flat_qc.T @ flat_dq
         d_que_concat = d_out_que @ self.W_fusion.T
 
         d_que_self_from_fusion = d_que_concat[:, :, :self.d_model]

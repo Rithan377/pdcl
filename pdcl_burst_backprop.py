@@ -113,17 +113,14 @@ class QASpanHead:
         p_start = softmax(logits_start, axis=-1)  # (B, T_doc)
         p_end   = softmax(logits_end,   axis=-1)  # (B, T_doc)
 
-        # Cross-entropy loss
-        loss = 0.0
-        for b in range(B):
-            s = int(to_cpu(start_targets[b]))
-            e = int(to_cpu(end_targets[b]))
-            s = max(0, min(s, T_doc - 1))
-            e = max(0, min(e, T_doc - 1))
-            loss -= float(to_cpu(np.log(p_start[b, s] + 1e-9)))
-            loss -= float(to_cpu(np.log(p_end[b, e] + 1e-9)))
+        # Cross-entropy loss — fully vectorized on GPU, no per-sample to_cpu()
+        b_idx = np.arange(B)
+        s_clamped = np.clip(start_targets, 0, T_doc - 1)
+        e_clamped = np.clip(end_targets, 0, T_doc - 1)
 
-        loss /= (2.0 * B)
+        log_p_s = np.log(p_start[b_idx, s_clamped] + 1e-9)
+        log_p_e = np.log(p_end[b_idx, e_clamped] + 1e-9)
+        loss = float(to_cpu(-np.sum(log_p_s + log_p_e) / (2.0 * B)))
 
         self._cache = {
             'gated_doc': gated_doc,
@@ -148,28 +145,26 @@ class QASpanHead:
         start_t   = cache['start_targets']
         end_t     = cache['end_targets']
 
-        # Gradient of cross-entropy loss w.r.t logits
+        # Gradient of cross-entropy loss w.r.t logits — vectorized GPU indexing
         d_logits_start = p_start.copy()  # (B, T_doc)
         d_logits_end   = p_end.copy()
 
-        for b in range(B):
-            s = max(0, min(int(to_cpu(start_t[b])), T_doc - 1))
-            e = max(0, min(int(to_cpu(end_t[b])),   T_doc - 1))
-            d_logits_start[b, s] -= 1.0
-            d_logits_end[b, e]   -= 1.0
+        b_idx = np.arange(B)
+        s_clamped = np.clip(start_t, 0, T_doc - 1)
+        e_clamped = np.clip(end_t, 0, T_doc - 1)
+        d_logits_start[b_idx, s_clamped] -= 1.0
+        d_logits_end[b_idx, e_clamped]   -= 1.0
 
         d_logits_start /= (2.0 * B)
         d_logits_end   /= (2.0 * B)
 
         # Gradient w.r.t v_start and v_end
-        self.dv_start += np.sum(
-            gated_doc.transpose(0, 2, 1) @ d_logits_start[:, :, np.newaxis],
-            axis=0
-        )
-        self.dv_end += np.sum(
-            gated_doc.transpose(0, 2, 1) @ d_logits_end[:, :, np.newaxis],
-            axis=0
-        )
+        # Reshape to 2D GEMM: (B*T_doc, d).T @ (B*T_doc, 1) → (d, 1)
+        # Mathematically equivalent to sum(batch 3D matmul, axis=0) but
+        # executes as a single cuBLAS gemm with zero intermediate 3D allocation.
+        gated_flat = gated_doc.reshape(-1, self.d_model)             # (B*T_doc, d)
+        self.dv_start += gated_flat.T @ d_logits_start.reshape(-1, 1)  # (d, 1)
+        self.dv_end   += gated_flat.T @ d_logits_end.reshape(-1, 1)    # (d, 1)
 
         # Gradient w.r.t gated_doc
         d_gated_doc = (
@@ -230,47 +225,42 @@ def apply_core_burst_scaling(model: 'CoreBurstBackprop',
         if dW is None or dW.ndim < 2:
             continue
 
-        W_cpu  = to_cpu(W)
-        dW_cpu = to_cpu(dW)
-
-        fan_in, fan_out = W_cpu.shape[0], W_cpu.shape[1]
+        fan_in, fan_out = W.shape[0], W.shape[1]
         if fan_out < 2:
             continue
 
-        # Record unscaled gradient norms BEFORE any scaling
-        grad_mag = _cpu_np.linalg.norm(dW_cpu, axis=0)   # (fan_out,)
-        model._unscaled_grad_norms[name] = grad_mag.copy()
+        # All norm/decay computation stays on GPU — zero PCI-e transfers.
+        # Column-wise L2 norms: sqrt(sum(x^2, axis=0))
+        grad_mag = np.sqrt(np.sum(dW * dW, axis=0))     # (fan_out,) on device
+        weight_mag = np.sqrt(np.sum(W * W, axis=0))      # (fan_out,) on device
 
-        weight_mag = _cpu_np.linalg.norm(W_cpu, axis=0)   # (fan_out,)
-        core_score = grad_mag * weight_mag                  # (fan_out,)
+        # Record unscaled gradient norms (CPU copy only for diagnostics)
+        model._unscaled_grad_norms[name] = _cpu_np.array(to_cpu(grad_mag))
 
-        if core_score.sum() < 1e-12:
+        core_score = grad_mag * weight_mag                # (fan_out,) on device
+
+        if float(to_cpu(np.sum(core_score))) < 1e-12:
             # No signal — mark all as active (no freezing)
             model._active_masks[name] = _cpu_np.ones(fan_out, dtype=_cpu_np.float32)
             continue
 
-        # Core point
-        j_star = int(_cpu_np.argmax(core_score))
+        # Core point — single scalar transfer
+        j_star = int(to_cpu(np.argmax(core_score)))
 
-        # Distance from core (normalized)
-        js   = _cpu_np.arange(fan_out, dtype=_cpu_np.float32)
-        dist = _cpu_np.abs(js - j_star) / max(fan_out - 1, 1)
+        # Distance from core (normalized) — computed on GPU
+        js   = np.arange(fan_out, dtype=np.float32)
+        dist = np.abs(js - np.float32(j_star)) / np.float32(max(fan_out - 1, 1))
 
-        # Exponential decay
-        decay = _cpu_np.exp(-beta * dist)  # (fan_out,)
+        # Exponential decay on GPU
+        decay = np.exp(np.float32(-beta) * dist)           # (fan_out,) on device
 
         # Blast range: active if decay >= threshold, frozen otherwise
-        active_mask = (decay >= freeze_threshold).astype(_cpu_np.float32)
-        model._active_masks[name] = active_mask
+        active_mask = (decay >= np.float32(freeze_threshold)).astype(np.float32)
+        model._active_masks[name] = _cpu_np.array(to_cpu(active_mask))
 
-        # Apply: scale active columns by decay, zero frozen columns
-        scaled_dW = dW_cpu * decay[_cpu_np.newaxis, :] * active_mask[_cpu_np.newaxis, :]
-
-        # Write back
-        if hasattr(dW, 'set'):  # CuPy
-            dW.set(scaled_dW.astype(dW.dtype))
-        else:
-            dW[:] = scaled_dW
+        # Apply in-place on GPU: scale active columns by decay, zero frozen columns
+        scale = decay * active_mask                        # (fan_out,) on device
+        dW *= scale[np.newaxis, :]                         # in-place broadcast multiply
 
 
 def _collect_weight_grad_pairs(model: 'CoreBurstBackprop') -> dict:
@@ -390,7 +380,7 @@ class CoreBurstBackprop:
         seq_que = seg_out['seq_que']   # (B, T_que, d)
 
         # 3. Parallel attention
-        attn_out = self.attention.forward(seq_doc, seq_que)
+        attn_out = self.attention.forward(seq_doc, seq_que, training=training)
         out_doc  = attn_out['out_doc']  # (B, T_doc, d)
         out_que  = attn_out['out_que']  # (B, T_que, d)
 

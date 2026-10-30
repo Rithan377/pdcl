@@ -151,3 +151,5 @@ print(f"{'='*70}")
 print(f"Total time: {elapsed/60:.1f} minutes")
 log_gpu_memory("Final")
 print()
+
+

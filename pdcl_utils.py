@@ -252,7 +252,8 @@ class PDCLConfig:
                  dynamic_lr_loss_ratio: bool = False,
                  burst_freeze_threshold: float = 0.15,
                  keep_batch_size_phase2: bool = False,
-                 max_phase2_lr: float = 0.003):
+                 max_phase2_lr: float = 0.003,
+                 unfreeze_after_pruning_epochs: int = 10):
         """Initialize PDCL configuration."""
         
         self.n_dimensions = n_dimensions
@@ -291,6 +292,7 @@ class PDCLConfig:
         self.burst_freeze_threshold = burst_freeze_threshold
         self.keep_batch_size_phase2 = keep_batch_size_phase2
         self.max_phase2_lr = max_phase2_lr
+        self.unfreeze_after_pruning_epochs = unfreeze_after_pruning_epochs
 
     def to_dict(self) -> Dict:
         """Convert config to dictionary."""

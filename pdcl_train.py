@@ -504,8 +504,10 @@ def train_pdcl(config: PDCLConfig = None, **kwargs):
     patience = 15  # Stop if no improvement for 15 epochs
     best_checkpoint_path = config.checkpoint_path.replace('.pkl', '_best.pkl')
 
-    # Two-phase maturity tracking
+    # Three-phase maturity tracking
     maturity_reached = False
+    maturity_epoch = 0
+    phase3_active = False
     initial_loss = None
     phase2_patience = 0          # counts epochs without val_loss improvement
     phase2_patience_limit = 3    # activate Phase 2 after 3 stagnant epochs
@@ -525,15 +527,20 @@ def train_pdcl(config: PDCLConfig = None, **kwargs):
         epoch_losses = []
         epoch_dim_losses = []
 
-        # Phase 2 uses batch_size=1 per dimension for sharp core burst focus
-        effective_batch_size = config.batch_size if getattr(config, 'keep_batch_size_phase2', False) else (1 if maturity_reached else config.batch_size)
+        # Phase 2 batch size: keep stable if configured, else drop to 1
+        # Phase 3 always restores full batch size
+        if phase3_active or getattr(config, 'keep_batch_size_phase2', False):
+            effective_batch_size = config.batch_size
+        else:
+            effective_batch_size = 1 if maturity_reached else config.batch_size
 
         for step in range(config.steps_per_epoch):
             try:
                 global_loss, dim_losses = engine.execute_parallel_step(
                     lr=config.lr,
                     clip_norm=config.clip_norm,
-                    batch_size=effective_batch_size
+                    batch_size=effective_batch_size,
+                    feature_pruner=feature_pruner if (maturity_reached and not phase3_active) else None
                 )
                 epoch_losses.append(global_loss)
                 epoch_dim_losses.append(dim_losses)
@@ -564,8 +571,8 @@ def train_pdcl(config: PDCLConfig = None, **kwargs):
 
         epoch_report = {}
 
-        # 1. Feature Dimension Pruning (only after maturity)
-        if maturity_reached:
+        # 1. Feature Dimension Pruning (only during Phase 2, not Phase 3)
+        if maturity_reached and not phase3_active:
             sparsity_stats = feature_pruner.apply_masks(epoch, master)
             if sparsity_stats:
                 avg_sparsity = float(_cpu_np.mean(list(sparsity_stats.values())))
@@ -574,24 +581,34 @@ def train_pdcl(config: PDCLConfig = None, **kwargs):
             # Apply gradient masks to prevent pruned features from reviving
             feature_pruner.apply_gradient_masks(master)
 
-        # 2. Connection Pruning (conservative — only truly dead connections)
-        if maturity_reached:
+        # 2. Connection Pruning (conservative — only during Phase 2, not Phase 3)
+        if maturity_reached and not phase3_active:
             if not hasattr(engine, '_conn_prune_start_epoch'):
                 engine._conn_prune_start_epoch = epoch
             conn_epochs_active = epoch - engine._conn_prune_start_epoch
 
+            # Aggregate clone attention EMAs into master so pruning
+            # decisions reflect the full training distribution.
+            engine.aggregate_attention_ema()
+
             # Only prune every 5 epochs to give the model time to stabilize
             if conn_epochs_active > 0 and conn_epochs_active % 5 == 0:
-                # Use a tiny fixed threshold — only prune connections that are
-                # essentially dead (near-zero attention weight across all training)
-                effective_conn_threshold = 1e-6
+                base_threshold = getattr(config, 'conn_prune_threshold', 0.02)
+
+                # Gradual ramp: start at 20% of target threshold, reach
+                # 100% by the 5th pruning event (25 epochs of pruning).
+                # This prevents the first prune from being catastrophic.
+                n_prune_events = conn_epochs_active // 5  # 1, 2, 3, ...
+                ramp_factor = min(1.0, n_prune_events / 5.0)
+                effective_conn_threshold = base_threshold * ramp_factor
 
                 conn_stats = master.attention.update_connection_masks(
-                    threshold=effective_conn_threshold
+                    threshold=effective_conn_threshold,
+                    max_prune_rate=0.10  # cap at 10% of total connections per event
                 )
                 total_pruned = sum(conn_stats.values())
                 epoch_report['conn_pruned'] = total_pruned
-                epoch_report['conn_threshold'] = effective_conn_threshold
+                epoch_report['conn_threshold'] = round(effective_conn_threshold, 5)
             else:
                 epoch_report['conn_pruned'] = 0
                 epoch_report['conn_threshold'] = 0.0
@@ -673,6 +690,7 @@ def train_pdcl(config: PDCLConfig = None, **kwargs):
             )
             if is_mature:
                 maturity_reached = True
+                maturity_epoch = epoch
                 master.maturity_reached = True
                 # Propagate to all dimension clones
                 for clone in engine.dim_models:
@@ -682,7 +700,24 @@ def train_pdcl(config: PDCLConfig = None, **kwargs):
                       f"EM: {val_metrics['val_em']:.1f}% | F1: {val_metrics['val_f1']:.1f}%")
                 print(f"     → Core Burst Freezing: ON")
                 print(f"     → Feature/Connection Pruning: ON")
-                print(f"     → Batch size per dimension: 1 (sharp focus)")
+                eff_bs = config.batch_size if getattr(config, 'keep_batch_size_phase2', False) else 1
+                print(f"     → Batch size per dimension: {eff_bs}")
+
+        # ─────────────────────────────────────
+        # DYNAMIC UNFREEZE — after pruning epochs, unfreeze for fine-tuning
+        # ─────────────────────────────────────
+        if maturity_reached and not phase3_active and hasattr(config, 'unfreeze_after_pruning_epochs'):
+            epochs_in_phase2 = epoch - maturity_epoch
+            if epochs_in_phase2 >= config.unfreeze_after_pruning_epochs:
+                phase3_active = True
+                master.maturity_reached = False
+                for clone in engine.dim_models:
+                    clone.maturity_reached = False
+                print(f"  🔓 PHASE 3 — Unfreezing all weights for fine-tuning (after {epochs_in_phase2} pruning epochs)")
+                print(f"     → Core Burst Freezing: OFF")
+                print(f"     → Feature/Connection Pruning: OFF")
+                print(f"     → Pruned connections remain pruned")
+                print(f"     → All remaining weights are now trainable")
 
         history.append({
             'epoch': epoch,

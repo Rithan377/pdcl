@@ -1,4 +1,19 @@
-myenv
-_pycache_
-data
-checkpoints
+# Virtual environments
+myenv/
+.venv/
+env/
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Local data and checkpoints (large binary files)
+data/
+checkpoints/
+
+# System and IDE files
+.DS_Store
+.vscode/
+.idea/

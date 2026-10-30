@@ -45,7 +45,7 @@ def test_samples():
     best_checkpoint = "./checkpoints/pdcl_gpu_trained_loss_ratio_best.pkl.npz"
     final_checkpoint = "./checkpoints/pdcl_gpu_trained_loss_ratio.pkl.npz"
     
-    checkpoint_to_load = final_checkpoint
+    checkpoint_to_load = best_checkpoint if os.path.exists(best_checkpoint) else final_checkpoint
     
     if os.path.exists(checkpoint_to_load):
         print(f"Loading checkpoint from: {checkpoint_to_load}")
