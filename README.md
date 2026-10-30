@@ -1,16 +1,33 @@
-# Parallel Dimensional Core Learning (PDCL)
+<p align="center">
+  <img src="assets/pdcl_banner.png" alt="PDCL - Parallel Dimensional Core Learning" width="100%">
+</p>
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![CuPy](https://img.shields.io/badge/CuPy-CUDA%20Acceleration-76B900.svg?style=for-the-badge&logo=nvidia&logoColor=white)](https://cupy.dev/)
-[![NumPy](https://img.shields.io/badge/NumPy-Zero%20Framework-013243.svg?style=for-the-badge&logo=numpy&logoColor=white)](https://numpy.org/)
-[![Hardware](https://img.shields.io/badge/Validated%20On-RTX%204080%20(11.5GB)-76B900.svg?style=for-the-badge&logo=nvidia&logoColor=white)](https://www.nvidia.com)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+<p align="center">
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2B-blue.svg?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+"></a>
+  <a href="https://cupy.dev/"><img src="https://img.shields.io/badge/CuPy-CUDA%20Accelerated-76B900.svg?style=flat-square&logo=nvidia&logoColor=white" alt="CuPy CUDA"></a>
+  <a href="https://numpy.org/"><img src="https://img.shields.io/badge/NumPy-Zero%20Framework-013243.svg?style=flat-square&logo=numpy&logoColor=white" alt="NumPy"></a>
+  <a href="https://www.nvidia.com"><img src="https://img.shields.io/badge/Validated%20On-RTX%204080%20(11.5GB)-76B900.svg?style=flat-square&logo=nvidia&logoColor=white" alt="RTX 4080"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=flat-square" alt="MIT License"></a>
+</p>
 
-> **A Library-Free, Graph-Based Multidimensional Deep Learning Architecture with Compiler-Style Parallel Training, Adaptive Pruning, and Graph-Weighted Gradient Aggregation**
+<p align="center">
+  <b>PDCL</b> is a library-free, graph-based multidimensional deep learning architecture built from first-principles matrix calculus.
+  <br>
+  No PyTorch. No TensorFlow. Just pure parallel dimensional computation, adaptive pruning, and graph-weighted gradient dynamics.
+</p>
 
-**Author**: **Rithan Nandakumar** ([@Rithan377](https://github.com/Rithan377))  
-Department of Artificial Intelligence and Data Science, Anna University, Chennai 600025, India  
-*Corresponding Contact*: `nsrithan15@gmail.com` | `he/him`
+<p align="center">
+  <a href="#1-executive-summary">Overview</a> •
+  <a href="#3-core-architectural-mechanisms">Architecture</a> •
+  <a href="#4-three-phase-evolutionary-training-pipeline">3-Phase Training</a> •
+  <a href="#9-quick-start--training-workflows">Quick Start</a> •
+  <a href="#11-experimental-verification--benchmarks">Benchmarks</a> •
+  <a href="#13-citation">Citation</a>
+</p>
+
+<p align="center">
+  <sub>Developed by <b><a href="https://github.com/Rithan377">Rithan Nandakumar</a></b> • Department of AI & Data Science, Anna University, Chennai</sub>
+</p>
 
 ---
 
